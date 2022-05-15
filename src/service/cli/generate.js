@@ -2,7 +2,7 @@
 
 const fs = require(`fs`);
 const {getRandomInt, shuffle, createDate} = require(`../../utils.js`);
-const {TITLES, SENTENCES, CATEGORY} = require(`../../mock_data/mock_data.js`);
+const {TITLES, SENTENCES, CATEGORY} = require(`../../mock-data/mock-data.js`);
 const {ExitCode} = require(`../../constans.js`);
 
 const DEFAULT_COUNT = 1;
@@ -29,14 +29,15 @@ module.exports = {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     if (countOffer >= MAX_COUNT) {
-      console.log(`Не больше 1000 публикаций`);
-      process.exit(ExitCode.error);
+      console.log(`Не больше ${MAX_COUNT} публикаций`);
+      process.exit(ExitCode.ERROR);
     }
     const content = JSON.stringify(generatePublication(countOffer));
 
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
-        return console.error(`Can't write data to file...`);
+        console.error(`Can't write data to file...`);
+        process.exit(ExitCode.ERROR);
       }
       return console.info(`Operation success. File created.`);
     });

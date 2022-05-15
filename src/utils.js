@@ -8,12 +8,13 @@ const getRandomInt = (min, max) => {
 };
 
 const shuffle = (someArray) => {
-  for (let i = someArray.length - 1; i > 0; i--) {
+  let arrCopy = someArray.slice();
+  for (let i = arrCopy.length - 1; i > 0; i--) {
     const randomPosition = Math.floor(Math.random() * i);
-    [someArray[i], someArray[randomPosition]] = [someArray[randomPosition], someArray[i]];
+    [arrCopy[i], arrCopy[randomPosition]] = [arrCopy[randomPosition], arrCopy[i]];
   }
 
-  return someArray;
+  return arrCopy;
 };
 
 const createDate = (minDate, currentDate) => {
