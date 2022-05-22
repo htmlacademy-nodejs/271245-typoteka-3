@@ -1,6 +1,8 @@
 'use strict';
 
 const fs = require(`fs`);
+const promisify = require(`util`).promisify;
+const {green, red} = require(`chalk`);
 const {getRandomInt, shuffle, createDate} = require(`../../utils.js`);
 const {TITLES, SENTENCES, CATEGORY} = require(`../../mock-data/mock-data.js`);
 const {ExitCode} = require(`../../constans.js`);
@@ -25,21 +27,22 @@ const generatePublication = (count) => {
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     if (countOffer >= MAX_COUNT) {
-      console.log(`Не больше ${MAX_COUNT} публикаций`);
+      console.log(red.bold(`Не больше ${MAX_COUNT} публикаций`));
       process.exit(ExitCode.ERROR);
     }
     const content = JSON.stringify(generatePublication(countOffer));
+    const promisedWriteFile = promisify(fs.writeFile);
 
-    fs.writeFile(FILE_NAME, content, (err) => {
-      if (err) {
-        console.error(`Can't write data to file...`);
-        process.exit(ExitCode.ERROR);
-      }
-      return console.info(`Operation success. File created.`);
-    });
+    try {
+      await promisedWriteFile(FILE_NAME, content);
+      console.info(green.bold(`Operation success. File created.`));
+    } catch (error) {
+      console.error(red.bold(`Can't write data to file, because ${error}`));
+      process.exit(ExitCode.ERROR);
+    }
   },
 };
