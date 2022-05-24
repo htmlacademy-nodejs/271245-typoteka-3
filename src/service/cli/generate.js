@@ -1,7 +1,6 @@
 'use strict';
 
-const {readFile, writeFile} = require(`fs`);
-const promisify = require(`util`).promisify;
+const {readFile, writeFile} = require(`fs`).promises;
 const {green, red} = require(`chalk`);
 const {getRandomInt, shuffle, createDate} = require(`../../utils.js`);
 const {ExitCode} = require(`../../constans.js`);
@@ -15,12 +14,9 @@ const TITLE_FILE_PATH = `./data/titles.txt`;
 const CATEGORIES_FILE_PATH = `./data/categories.txt`;
 const SENTENCES_FILE_PATH = `./data/sentences.txt`;
 
-const promisedWriteFile = promisify(writeFile);
-const promisedReadFile = promisify(readFile);
-
 const getContentList = async (filePath) => {
   try {
-    const fileContent = await promisedReadFile(filePath, `utf8`);
+    const fileContent = await readFile(filePath, `utf8`);
     return fileContent.trim().split(/\r?\n/);
   } catch (error) {
     console.error(red.bold(`Can't read file, because ${error}`));
@@ -59,7 +55,7 @@ module.exports = {
     const content = JSON.stringify(generatePublication(countOffer, ...contentMatrix));
 
     try {
-      await promisedWriteFile(FILE_NAME, content);
+      await writeFile(FILE_NAME, content);
       console.info(green.bold(`Operation success. File created.`));
     } catch (error) {
       console.error(red.bold(`Can't write data to file, because ${error}`));

@@ -1,47 +1,71 @@
 'use strict';
 
 const http = require(`http`);
-const {red} = require(`chalk`);
+const fs = require(`fs`).promises;
+const {red,green} = require(`chalk`);
 const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
 
+const FILENAME = `mock.json`;
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
 
 const setPort = (port) => {
-  const isCorrectPort = Number.parseInt(port, 10) > MIN_PORT && Number.parseInt(port, 10) < MAX_PORT;
-  return isCorrectPort ? port : DEFAULT_PORT;
+  const portInt = Number.parseInt(port, 10);
+  const isCorrectPort = portInt > MIN_PORT && portInt < MAX_PORT;
+  return isCorrectPort ? portInt : DEFAULT_PORT;
 };
 
-const getTitles = () => {
-  try {
-    const titleList = require(`../../../mock.json`).map((item) => item.title);
-    return titleList;
-  } catch (err) {
-    console.error(red.bold(`Something went wrong, reason: ${err}`));
-    return null;
+const sendResponse = (res, statusCode, message) => {
+  const template = `
+    <!Doctype html>
+      <html lang="ru">
+      <head>
+        <title>Test!</title>
+      </head>
+      <body>${message}</body>
+    </html>`.trim();
+
+  res.writeHead(statusCode, {
+    'Content-Type': `text/html; charset=UTF-8`,
+  });
+
+  res.end(template);
+};
+
+const onClientConnect = async (req, res) => {
+  const notFoundMessageText = `Not found`;
+
+  switch (req.url) {
+    case `/`:
+      try {
+        const fileContent = await fs.readFile(FILENAME);
+        const mocks = JSON.parse(fileContent);
+        const message = `<ul>${mocks.map((post) => `<li>${post.title}</li>`).join(``)}</ul>`;
+        sendResponse(res, HttpCode.OK, 111);
+      } catch (err) {
+        console.log(11);
+        sendResponse(res, HttpCode.NOT_FOUND, notFoundMessageText);
+      }
+      break;
+    default:
+      sendResponse(res, HttpCode.NOT_FOUND, notFoundMessageText);
+      break;
   }
 };
-
-const setHtmlLayout = (titleList) => {
-  return `<ul>${titleList.slice().map((item) => `<li>${item}</li>`)}</ul>`;
-};
-
-const server = http.createServer((req, res) => {
-  const titles = getTitles();
-  if (req.url === `/` && titles) {
-    res.writeHead(HttpCode.SUCCESS, {'Content-Type': `text/html; charset=UTF-8`});
-    res.end(setHtmlLayout(titles));
-  } else {
-    res.writeHead(HttpCode.NOT_FOUND, {'Content-Type': `text/html; charset=UTF-8`});
-    res.end(`<section>NOT FOUND</section>`);
-  }
-});
 
 module.exports = {
   name: `--server`,
   async run(args) {
     const [userPort] = args;
     const port = setPort(userPort);
-    server.listen(port);
+    http
+      .createServer(onClientConnect)
+      .listen(port)
+      .on(`listening`, (err) => {
+        console.info(green(`Ожидаю соединений на ${port}`));
+      })
+      .on(`error`, ({message}) => {
+        console.error(red(`Ошибка при создании сервера: ${message}`));
+      });
   },
 };

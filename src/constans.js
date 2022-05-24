@@ -10,8 +10,11 @@ const ExitCode = {
 };
 
 const HttpCode = {
-  SUCCESS: 200,
+  OK: 200,
   NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+  FORBIDDEN: 403,
+  UNAUTHORIZED: 401,
 };
 
 const USER_ARGV_INDEX = 2;
