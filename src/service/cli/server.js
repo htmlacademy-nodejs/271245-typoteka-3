@@ -41,7 +41,7 @@ const onClientConnect = async (req, res) => {
         const fileContent = await fs.readFile(FILENAME);
         const mocks = JSON.parse(fileContent);
         const message = `<ul>${mocks.map((post) => `<li>${post.title}</li>`).join(``)}</ul>`;
-        sendResponse(res, HttpCode.OK, 111);
+        sendResponse(res, HttpCode.OK, message);
       } catch (err) {
         console.log(11);
         sendResponse(res, HttpCode.NOT_FOUND, notFoundMessageText);
