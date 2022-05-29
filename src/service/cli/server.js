@@ -2,7 +2,7 @@
 
 const http = require(`http`);
 const fs = require(`fs`).promises;
-const {red,green} = require(`chalk`);
+const {red, green} = require(`chalk`);
 const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
 
 const FILENAME = `mock.json`;
