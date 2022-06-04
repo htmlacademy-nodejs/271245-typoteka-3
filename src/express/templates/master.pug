@@ -2,6 +2,10 @@ doctype html
 html(lang='ru')
   include includes/head.pug
 
+block variables 
+  - let wrapperClassName = 'wrapper'
+
 body
-  block content
+  div(class=wrapperClassName)
+    block content
   include includes/scripts.pug
