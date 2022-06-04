@@ -3,14 +3,20 @@
 const {Router} = require(`express`);
 const rootRouter = new Router();
 
-rootRouter.get(`/`, (req, res) => res.send(`/`));
+rootRouter.get(`/`, (req, res) => {
+  res.render(`welcome/main`);
+});
 
-rootRouter.get(`/register`, (req, res) => res.send(`/register`));
+rootRouter.get(`/register`, (req, res) => {
+  res.render(`join/register`);
+});
 
-rootRouter.get(`/login`, (req, res) => res.send(`/login `));
+rootRouter.get(`/login`, (req, res) => {
+  res.render(`join/login`);
+});
 
-rootRouter.get(`/search`, (req, res) => res.send(`/search `));
-
-rootRouter.get(`/search`, (req, res) => res.send(`/search `));
+rootRouter.get(`/search`, (req, res) => {
+  res.render(`search/search`);
+});
 
 module.exports = rootRouter;
