@@ -3,7 +3,7 @@ extends ../master.pug
 block variables 
   - wrapperClassName = 'wrapper-color'
 
-block content
+block header
   <header class="header header--error">
     <a class="header__logo header__logo--404 logo" href="#">
       <img src="img/icons/logo.svg" alt="логотип Тайпотеки">
@@ -13,6 +13,7 @@ block content
     <a class="header__search button button--search" href="#" aria-label="поиск по сайту"></a>
   </header>
 
+block main
   <main>
     <h1 class="visually-hidden">Ошибка 404</h1>
     <section class="error">
@@ -20,12 +21,3 @@ block content
       <a class="error__link text text--big" href="main.html">Вернуться на главную</a>
     </section>
   </main>
-
-  <footer class="footer">
-    <a class="footer__copyright" href="#" aria-label="HTMLAcademy">
-      <img src="img/icons/HTMLAcademyLogo.svg" width="112" height="50" alt="HTMLAcademy">
-    </a>
-    <span class="footer__dot"></span>
-    <p class="footer__text">Типотека, 2019</p>
-  </footer>
-  
