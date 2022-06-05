@@ -1,10 +1,18 @@
 'use strict';
+// /my;
 
 const {Router} = require(`express`);
-const newRouter = new Router();
+const myRouter = new Router();
 
-newRouter.get(`/`, (req, res) => res.send(`/my`));
-newRouter.get(`/comments`, (req, res) => res.send(`/my/comments`));
-newRouter.get(`/categories`, (req, res) => res.send(`/my/categories`));
+myRouter.get(`/`, (req, res) => {
+  res.render(`admin_activity/my`);
+});
 
-module.exports = newRouter;
+myRouter.get(`/comments`, (req, res) => {
+  res.render(`admin_activity/comments`);
+});
+myRouter.get(`/categories`, (req, res) => {
+  res.render(`admin_activity/all-categories`);
+});
+
+module.exports = myRouter;

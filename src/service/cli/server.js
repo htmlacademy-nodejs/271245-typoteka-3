@@ -61,7 +61,7 @@ module.exports = {
     http
       .createServer(onClientConnect)
       .listen(port)
-      .on(`listening`, (err) => {
+      .on(`listening`, () => {
         console.info(green(`Ожидаю соединений на ${port}`));
       })
       .on(`error`, ({message}) => {

@@ -1,0 +1,13 @@
+doctype html
+html(lang='ru')
+  include includes/head.pug
+
+block variables 
+  - let wrapperClassName = 'wrapper'
+
+body
+  div(class=wrapperClassName)
+    block header
+    block main
+    include includes/footer.pug
+  include includes/scripts.pug

@@ -1,0 +1,23 @@
+extends ../master.pug
+
+block variables 
+  - wrapperClassName = 'wrapper-color'
+
+block header
+  <header class="header header--error">
+    <a class="header__logo header__logo--404 logo" href="#">
+      <img src="img/icons/logo.svg" alt="логотип Тайпотеки">
+    </a>
+    <a class="header__registration" href="#">Регистрация</a>
+    <a class="header__enter" href="#">Вход с паролем</a>
+    <a class="header__search button button--search" href="#" aria-label="поиск по сайту"></a>
+  </header>
+
+block main
+  <main>
+    <h1 class="visually-hidden">Ошибка 404</h1>
+    <section class="error">
+      <h2 class="error__title title title--big">Похоже ошиблись адресом</h2>
+      <a class="error__link text text--big" href="main.html">Вернуться на главную</a>
+    </section>
+  </main>
