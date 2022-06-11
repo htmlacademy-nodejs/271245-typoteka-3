@@ -4,20 +4,16 @@ block variables
   - wrapperClassName = 'wrapper-color'
 
 block header
-  <header class="header header--error">
-    <a class="header__logo header__logo--404 logo" href="#">
-      <img src="img/icons/logo.svg" alt="логотип Тайпотеки">
-    </a>
-    <a class="header__registration" href="#">Регистрация</a>
-    <a class="header__enter" href="#">Вход с паролем</a>
-    <a class="header__search button button--search" href="#" aria-label="поиск по сайту"></a>
-  </header>
+  header.header.header--error
+    a.header__logo.header__logo--404.logo(href='#')
+      img(src='img/icons/logo.svg' alt='логотип Тайпотеки')
+    a.header__registration(href='#') Регистрация
+    a.header__enter(href='#') Вход с паролем
+    a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
 
 block main
-  <main>
-    <h1 class="visually-hidden">Ошибка 404</h1>
-    <section class="error">
-      <h2 class="error__title title title--big">Похоже ошиблись адресом</h2>
-      <a class="error__link text text--big" href="main.html">Вернуться на главную</a>
-    </section>
-  </main>
+  main
+    h1.visually-hidden Ошибка 404
+    section.error
+      h2.error__title.title.title--big Похоже ошиблись адресом
+      a.error__link.text.text--big(href='main.html') Вернуться на главную
