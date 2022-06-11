@@ -3,19 +3,19 @@
 const {Router} = require(`express`);
 const rootRouter = new Router();
 
-rootRouter.get(`/`, (req, res) => {
+rootRouter.get(`/`, (_req, res) => {
   res.render(`welcome/main`);
 });
 
-rootRouter.get(`/register`, (req, res) => {
+rootRouter.get(`/register`, (_req, res) => {
   res.render(`join/register`);
 });
 
-rootRouter.get(`/login`, (req, res) => {
+rootRouter.get(`/login`, (_req, res) => {
   res.render(`join/login`);
 });
 
-rootRouter.get(`/search`, (req, res) => {
+rootRouter.get(`/search`, (_req, res) => {
   res.render(`search/search`);
 });
 

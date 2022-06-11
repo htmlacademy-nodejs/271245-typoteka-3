@@ -4,14 +4,14 @@
 const {Router} = require(`express`);
 const myRouter = new Router();
 
-myRouter.get(`/`, (req, res) => {
+myRouter.get(`/`, (_req, res) => {
   res.render(`admin_activity/my`);
 });
 
-myRouter.get(`/comments`, (req, res) => {
+myRouter.get(`/comments`, (_req, res) => {
   res.render(`admin_activity/comments`);
 });
-myRouter.get(`/categories`, (req, res) => {
+myRouter.get(`/categories`, (_req, res) => {
   res.render(`admin_activity/all-categories`);
 });
 

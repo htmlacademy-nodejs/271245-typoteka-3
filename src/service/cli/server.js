@@ -1,27 +1,12 @@
 'use strict';
 
 const express = require(`express`);
-const fs = require(`fs`).promises;
-const {green} = require(`chalk`);
+const postsRouter = require(`../routes/root.js`);
+const {red, green} = require(`chalk`);
 const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
 
-const FILENAME = `mock.json`;
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
-
-const app = express();
-const postsRouter = new express.Router();
-app.use(express.json());
-
-postsRouter.get(`/posts`, async (_req, res) => {
-  try {
-    const fileContent = await fs.readFile(FILENAME);
-    const mocks = JSON.parse(fileContent);
-    res.json(mocks);
-  } catch (_err) {
-    res.send([]);
-  }
-});
 
 const setPort = (port) => {
   const portInt = Number.parseInt(port, 10);
@@ -35,6 +20,12 @@ module.exports = {
     const NOT_FOUND_TEXT = `Not found`;
     const [userPort] = args;
     const port = setPort(userPort);
+
+    const app = express();
+    app.use(express.json());
+    app.use(`/`, postsRouter);
+
+    postsRouter.get(`/posts`, postsRouter);
 
     app.listen(port, () => {
       console.log(green(`CLI-Сервер создан, порт: ${port}`));
