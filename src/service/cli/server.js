@@ -1,10 +1,6 @@
 'use strict';
 
 const express = require(`express`);
-
-const app = express();
-app.use(express.json());
-
 const fs = require(`fs`).promises;
 const {green} = require(`chalk`);
 const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
@@ -12,6 +8,20 @@ const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
 const FILENAME = `mock.json`;
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
+
+const app = express();
+const postsRouter = new express.Router();
+app.use(express.json());
+
+postsRouter.get(`/posts`, async (_req, res) => {
+  try {
+    const fileContent = await fs.readFile(FILENAME);
+    const mocks = JSON.parse(fileContent);
+    res.json(mocks);
+  } catch (_err) {
+    res.send([]);
+  }
+});
 
 const setPort = (port) => {
   const portInt = Number.parseInt(port, 10);
@@ -30,20 +40,9 @@ module.exports = {
       console.log(green(`CLI-Сервер создан, порт: ${port}`));
     });
 
-    app.get(`/posts`, async (req, res) => {
-      try {
-        const fileContent = await fs.readFile(FILENAME);
-        const mocks = JSON.parse(fileContent);
-        res.json(mocks);
-      } catch (_err) {
-        res.send([]);
-      }
-    });
+    app.use(`/`, postsRouter);
 
-    app.use((req, res) => res
-      .status(HttpCode.NOT_FOUND)
-      .send(NOT_FOUND_TEXT)
-    );
+    app.use((_req, res) => res.status(HttpCode.NOT_FOUND).send(NOT_FOUND_TEXT));
 
   },
 };
