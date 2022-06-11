@@ -27,9 +27,13 @@ module.exports = {
 
     postsRouter.get(`/posts`, postsRouter);
 
-    app.listen(port, () => {
-      console.log(green(`CLI-Сервер создан, порт: ${port}`));
-    });
+    app.listen(port)
+      .on(`listening`, () => {
+        console.info(green(`Ожидаю соединений на ${port}`));
+      })
+      .on(`error`, ({message}) => {
+        console.error(red(`Ошибка при создании сервера: ${message}`));
+      });
 
     app.use(`/`, postsRouter);
 
