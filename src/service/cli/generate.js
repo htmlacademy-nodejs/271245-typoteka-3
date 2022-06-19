@@ -44,7 +44,7 @@ const generatePublication = (count, titles, category, sentences, comments) => {
       announce: shuffle(sentences).slice(0, getRandomInt(0, ANNOUNCE_MAX_COUNT)).join(` `),
       fullText: shuffle(sentences).slice(0, getRandomInt(0, sentences.length - 1)).join(` `),
       createdDate: createDate(Date.now() - THREE_MONTH_TIMESTAMP, Date.now()),
-      сategory: shuffle(category).slice(0, getRandomInt(0, category.length - 1)),
+      category: shuffle(category).slice(0, getRandomInt(0, category.length - 1)),
       comments: createComments(getRandomInt(1, COMMENTS_MAX_COUNT), comments),
     };
   });

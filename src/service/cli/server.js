@@ -1,9 +1,9 @@
 'use strict';
 
 const express = require(`express`);
-const postsRouter = require(`../routes/root.js`);
 const {red, green} = require(`chalk`);
 const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
+const routes = require(`../api`);
 
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
@@ -23,9 +23,7 @@ module.exports = {
 
     const app = express();
     app.use(express.json());
-    app.use(`/`, postsRouter);
-
-    postsRouter.get(`/posts`, postsRouter);
+    app.use(routes);
 
     app.listen(port)
       .on(`listening`, () => {
@@ -34,8 +32,6 @@ module.exports = {
       .on(`error`, ({message}) => {
         console.error(red(`Ошибка при создании сервера: ${message}`));
       });
-
-    app.use(`/`, postsRouter);
 
     app.use((_req, res) => res.status(HttpCode.NOT_FOUND).send(NOT_FOUND_TEXT));
 
