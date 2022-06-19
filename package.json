@@ -4,7 +4,7 @@
   "description": "Типотека",
   "main": "./src/service/service.js",
   "scripts": {
-    "test": "npm run eslint",
+    "test": "jest",
     "eslint": "eslint --ext .js src/",
     "start": "node ./src/service/service.js",
     "start.dev": "nodemon ./src/service/service.js",
@@ -21,13 +21,23 @@
   },
   "homepage": "https://github.com/Polkovn1k/271245-typoteka-3#readme",
   "devDependencies": {
+    "debug": "4.3.4",
     "eslint": "8.15.0",
     "eslint-config-htmlacademy": "0.6.0",
-    "nodemon": "2.0.16"
+    "jest": "28.1.1",
+    "nodemon": "2.0.16",
+    "pino-debug": "2.0.0",
+    "pino-pretty": "8.0.0",
+    "supertest": "6.2.3"
   },
   "dependencies": {
     "chalk": "4.1.2",
+    "cross-env": "7.0.3",
+    "dotenv": "16.0.1",
     "express": "4.18.1",
+    "express-pino-logger": "7.0.0",
+    "nanoid": "3.3.4",
+    "pino": "8.0.0",
     "pug": "3.0.2"
   }
 }

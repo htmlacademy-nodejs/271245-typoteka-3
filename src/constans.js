@@ -4,6 +4,8 @@ const DEFAULT_COMMAND = `--help`;
 
 const DEFAULT_PORT = 3000;
 
+const MAX_ID_LENGTH = 6;
+
 const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
@@ -25,4 +27,5 @@ module.exports = {
   ExitCode,
   HttpCode,
   USER_ARGV_INDEX,
+  MAX_ID_LENGTH,
 };
