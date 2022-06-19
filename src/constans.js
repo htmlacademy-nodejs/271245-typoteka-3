@@ -21,6 +21,8 @@ const HttpCode = {
 
 const USER_ARGV_INDEX = 2;
 
+const API_PREFIX = `/api/v1`;
+
 module.exports = {
   DEFAULT_COMMAND,
   DEFAULT_PORT,
@@ -28,4 +30,5 @@ module.exports = {
   HttpCode,
   USER_ARGV_INDEX,
   MAX_ID_LENGTH,
+  API_PREFIX,
 };

@@ -3,16 +3,16 @@
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../constans.js`);
 
-const categoryRoute = new Router();
+const articlesRoute = new Router();
 
-const setCategoryController = (app, service) => {
-  app.use(`/category`, categoryRoute);
+const setArticlesController = (app, service) => {
+  app.use(`/articles`, articlesRoute);
 
-  categoryRoute.get(`/`, async (_req, res) => {
+  articlesRoute.get(`/`, async (_req, res) => {
     const categories = await service.findAll();
     res.status(HttpCode.OK)
       .json(categories);
   });
 };
 
-module.exports = setCategoryController;
+module.exports = setArticlesController;

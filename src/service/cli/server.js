@@ -2,7 +2,7 @@
 
 const express = require(`express`);
 const {red, green} = require(`chalk`);
-const {DEFAULT_PORT, HttpCode} = require(`../../constans.js`);
+const {DEFAULT_PORT, HttpCode, API_PREFIX} = require(`../../constans.js`);
 const routes = require(`../api`);
 
 const MIN_PORT = 1000;
@@ -23,7 +23,7 @@ module.exports = {
 
     const app = express();
     app.use(express.json());
-    app.use(routes);
+    app.use(API_PREFIX, routes);
 
     app.listen(port)
       .on(`listening`, () => {

@@ -1,10 +1,12 @@
 'use strict';
 
 const {Router} = require(`express`);
-const category = require(`../api/сategory.js`);
+const setCategoryController = require(`../api/сategory.js`);
+const setArticlesController = require(`../api/articles.js`);
 const getMockData = require(`../lib/get-mock-data.js`);
 const {
   CategoryService,
+  ArticlesService,
 } = require(`../data-service`);
 
 const app = new Router();
@@ -12,7 +14,8 @@ const app = new Router();
 (async () => {
   const mockData = await getMockData();
 
-  category(app, new CategoryService(mockData));
+  setCategoryController(app, new CategoryService(mockData));
+  setArticlesController(app, new ArticlesService(mockData));
 })();
 
 module.exports = app;
