@@ -1,13 +1,13 @@
 'use strict';
 
 class CategoryService {
-  constructor(offers) {
-    this._offers = offers;
+  constructor(article) {
+    this._article = article;
   }
 
   findAll() {
-    const categories = this._offers.reduce((acc, offer) => {
-      offer.category.forEach((category) => acc.add(category));
+    const categories = this._article.reduce((acc, item) => {
+      item.category.forEach((category) => acc.add(category));
       return acc;
     }, new Set());
 
