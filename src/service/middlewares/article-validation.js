@@ -14,7 +14,7 @@ const articleValidation = (req, res, next) => {
       .send(`Bad request / Bad PayLoad`);
   }
 
-  next();
+  return next();
 };
 
 module.exports = articleValidation;

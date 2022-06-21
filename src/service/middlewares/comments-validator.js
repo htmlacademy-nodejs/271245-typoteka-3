@@ -10,7 +10,7 @@ const commentsValidation = (req, res, next) => {
       .send(`Bad request / Bad Comment Payload`);
   }
 
-  next();
+  return next();
 };
 
 module.exports = commentsValidation;

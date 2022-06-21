@@ -12,7 +12,7 @@ const articleAvailability = (service) => {
         .send(`${articleId} - Not found`);
     }
 
-    next();
+    return next();
   };
 };
 
