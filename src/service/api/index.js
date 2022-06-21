@@ -7,6 +7,7 @@ const getMockData = require(`../lib/get-mock-data.js`);
 const {
   CategoryService,
   ArticlesService,
+  CommentsService,
 } = require(`../data-service`);
 
 const app = new Router();
@@ -15,7 +16,7 @@ const app = new Router();
   const mockData = await getMockData();
 
   setCategoryController(app, new CategoryService(mockData));
-  setArticlesController(app, new ArticlesService(mockData));
+  setArticlesController(app, new ArticlesService(mockData), new CommentsService());
 })();
 
 module.exports = app;
