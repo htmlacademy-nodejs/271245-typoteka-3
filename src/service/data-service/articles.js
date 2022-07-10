@@ -2,6 +2,9 @@
 
 const {nanoid} = require(`nanoid`);
 const {MAX_ID_LENGTH} = require(`../../constans.js`);
+const {createDate} = require(`../../utils.js`);
+
+const THREE_MONTH_TIMESTAMP = 86400000 * 7 * 4 * 3;
 
 class ArticlesService {
   constructor(articles) {
@@ -9,7 +12,7 @@ class ArticlesService {
   }
 
   create(article) {
-    const newArticle = Object.assign({id: nanoid(MAX_ID_LENGTH), comments: []}, article);
+    const newArticle = Object.assign({id: nanoid(MAX_ID_LENGTH), comments: [], createdDate: createDate(Date.now() - THREE_MONTH_TIMESTAMP, Date.now())}, article);
     this._articles.push(newArticle);
     return newArticle;
   }

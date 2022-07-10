@@ -5,7 +5,7 @@ const request = require(`supertest`);
 
 const {HttpCode} = require(`../../constans.js`);
 const search = require(`./search.js`);
-const DataService = require(`../data-service/search.js`);
+const {SearchService} = require(`../data-service`);
 
 const mockData = [
   {
@@ -75,24 +75,26 @@ const mockData = [
 
 const app = express();
 app.use(express.json());
-search(app, new DataService(mockData));
+search(app, new SearchService(mockData));
 
 describe(`API returns offer based on search query`, () => {
+  const MIN_ARTICLE_QUANTITY = 1;
+  const ARTICLE_TITLE_PART = `Учим HTML`;
   let response;
 
   beforeAll(async () => {
     response = await request(app)
       .get(`/search`)
       .query({
-        query: `Учим HTML`
+        query: ARTICLE_TITLE_PART
       });
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`1 offer found`, () => expect(response.body.length).toBe(1));
+  test(`${MIN_ARTICLE_QUANTITY} offer found`, () => expect(response.body.length).toBe(MIN_ARTICLE_QUANTITY));
 
-  test(`Offer has correct title`, () => expect(response.body[0].title).toBe(`Учим HTML и CSS`));
+  test(`Offer has correct title`, () => expect(response.body[0].title).toBe(`${ARTICLE_TITLE_PART} и CSS`));
 });
 
 describe(`API returns 4** code`, () => {

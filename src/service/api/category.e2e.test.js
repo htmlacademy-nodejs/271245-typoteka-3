@@ -5,7 +5,7 @@ const request = require(`supertest`);
 
 const {HttpCode} = require(`../../constans.js`);
 const category = require(`./category.js`);
-const DataService = require(`../data-service/category.js`);
+const {CategoryService} = require(`../data-service`);
 
 const mockData = [
   {
@@ -74,7 +74,7 @@ const mockData = [
 
 const app = express();
 app.use(express.json());
-category(app, new DataService(mockData));
+category(app, new CategoryService(mockData));
 
 describe(`API returns category list`, () => {
   let response;

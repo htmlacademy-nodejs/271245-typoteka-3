@@ -2,10 +2,14 @@
 
 const {HttpCode} = require(`../../constans.js`);
 
-const commentsValidation = (req, res, next) => {
-  const newComment = req.body.text;
+const commentKeys = [`text`, `id`];
 
-  if (!newComment) {
+const commentsValidation = (req, res, next) => {
+  const newComment = req.body;
+  const keys = Object.keys(newComment);
+  const keysExists = commentKeys.every((key) => keys.includes(key));
+
+  if (!keysExists) {
     return res.status(HttpCode.BAD_REQUEST)
       .send(`Bad request / Bad Comment Payload`);
   }

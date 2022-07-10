@@ -63,7 +63,7 @@ const setArticlesController = (app, articleService, commentsService) => {
     const pickedArticle = await articleService.findOne(articleId);
     const newComment = await commentsService.create(pickedArticle, req.body);
 
-    return res.status(HttpCode.OK)
+    return res.status(HttpCode.CREATED)
       .json(newComment);
   });
 
@@ -71,6 +71,11 @@ const setArticlesController = (app, articleService, commentsService) => {
     const {articleId, commentId} = req.params;
     const pickedArticle = await articleService.findOne(articleId);
     const deletedComment = await commentsService.drop(pickedArticle, commentId);
+
+    if (!deletedComment) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`Not found`);
+    }
 
     return res.status(HttpCode.OK)
       .json(deletedComment);
