@@ -17,7 +17,9 @@ const setSearchController = (app, searchService) => {
 
     const articles = await searchService.findAll(query);
 
-    return res.status(HttpCode.OK)
+    const statusCode = articles.length ? HttpCode.OK : HttpCode.NOT_FOUND;
+
+    return res.status(statusCode)
       .json(articles);
   });
 
