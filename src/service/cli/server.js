@@ -46,7 +46,7 @@ module.exports = {
 
     app.listen(port)
       .on(`listening`, () => {
-logger.info(`Listening to connections on ${port}`);
+        logger.info(`Listening to connections on ${port}`);
       })
       .on(`error`, (err) => {
         logger.error(`An error has occurred: ${err.message}`);
