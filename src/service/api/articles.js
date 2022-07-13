@@ -6,9 +6,9 @@ const articleValidation = require(`../middlewares/article-validation.js`);
 const articleAvailability = require(`../middlewares/article-availability.js`);
 const commentsValidation = require(`../middlewares/comments-validator.js`);
 
-const articlesRoute = new Router();
-
 const setArticlesController = (app, articleService, commentsService) => {
+  const articlesRoute = new Router();
+
   app.use(`/articles`, articlesRoute);
 
   articlesRoute.get(`/`, async (_req, res) => {

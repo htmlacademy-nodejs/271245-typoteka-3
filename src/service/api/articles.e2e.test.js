@@ -236,10 +236,7 @@ describe(`Delete the article - positive cases`, () => {
 
   test(`Article count is 4 now`, async () => {
     let res = await request(app).get(`/articles`);
-    // TODO Why 5 after delete?
-    // return expect(res.body.length).toBe(4);
-    console.log(res.body);
-    return expect(res.body.length).toBe(5);
+    return expect(res.body.length).toBe(4);
   });
 });
 
