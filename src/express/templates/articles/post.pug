@@ -20,13 +20,14 @@ block header
     a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
 
 block main
+  - var articleExists = typeof article !== 'undefined' && Object.keys(article).length > 0;
   main
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
           form(action='#' method='POST')
             .new-publication__header
-              h1 Новая публикация
+              h1 #{articleExists ? 'Редактировать публикацию' : 'Новая публикация'}
               .new-publication__date-form
                 h3 Дата публикации
                 .new-publication__date-form-division
@@ -39,7 +40,7 @@ block main
               .form__wrapper.form__wrapper--intro
                 .form__field
                   label
-                    input(type='text' name='title' placeholder='Заголовок' required='')
+                    input(type='text' name='title' placeholder='Заголовок' required='' value=(articleExists ? article.title : ''))
                 .form__field.form__field--post-image
                   label
                     input#image-name-field(type='text' name='photo' placeholder='Фотография' readonly='')
@@ -52,7 +53,7 @@ block main
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='5' name='announcement' placeholder='Анонс публикации')
+                    textarea(rows='5' name='announcement' placeholder='Анонс публикации') #{articleExists ? article.announce : ''}
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации')
+                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации') #{articleExists ? article.fullText : ''}

@@ -9,12 +9,14 @@ const {HttpCode} = require(`../constans.js`);
 const {green} = require(`chalk`);
 
 const PUBLIC_DIR = `public`;
+const UPLOAD_DIR = `upload`;
 const TEMPLATES_DIR = `templates`;
 const port = 8080;
 
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
+app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
 
 app.use(`/`, rootRoutes);
 
