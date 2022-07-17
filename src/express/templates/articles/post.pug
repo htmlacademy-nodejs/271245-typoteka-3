@@ -25,7 +25,7 @@ block main
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action='#' method='POST')
+          form(action='/articles/add' method='POST' enctype='multipart/form-data')
             .new-publication__header
               h1 #{articleExists ? 'Редактировать публикацию' : 'Новая публикация'}
               .new-publication__date-form
@@ -53,7 +53,7 @@ block main
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='5' name='announcement' placeholder='Анонс публикации') #{articleExists ? article.announce : ''}
+                    textarea(rows='5' name='announcement' required='' placeholder='Анонс публикации') #{articleExists ? article.announce : ''}
                 .form__field.form__field--publication-text
                   label
                     textarea(rows='10' name='full-text' placeholder='Полный текст публикации') #{articleExists ? article.fullText : ''}
