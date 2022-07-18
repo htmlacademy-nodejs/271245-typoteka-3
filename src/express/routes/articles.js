@@ -5,6 +5,7 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const {HttpCode} = require(`../../constans.js`);
+const {ensureArray} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const articlesRouter = new Router();
@@ -24,19 +25,24 @@ const storage = multer.diskStorage({
 const api = getAPI();
 const upload = multer({storage});
 
-articlesRouter.get(`/add`, (_req, res) => {
-  res.render(`articles/post`);
+articlesRouter.get(`/add`, upload.single(`article_img_upload`), async (_req, res) => {
+  try {
+    const categories = await api.getCategories();
+    res.render(`articles/post`, {categories});
+  } catch (err) {
+    res.status(HttpCode.NOT_FOUND).render(`errors/404`);
+  }
 });
 
-articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
-  const {date, title, photo, announcement} = req.body;
+articlesRouter.post(`/add`, upload.single(`article_img_upload`), async (req, res) => {
+  const {date, title, announcement, category} = req.body;
   const articleData = {
-    picture: photo,
+    picture: req.file.filename,
     createdDate: date,
     title,
     announce: announcement,
     fullText: req.body[`full-text`],
-    category: [`Программирование`],
+    category: ensureArray(category),
   };
 
   try {
@@ -52,11 +58,13 @@ articlesRouter.get(`/:id`, (_req, res) => {
 });
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
-  // TODO где правильнее обрабатывать?
   try {
     const {id} = req.params;
-    const article = await api.getArticle(id);
-    res.render(`articles/post`, {article});
+    const [article, categories] = await Promise.all([
+      api.getArticle(id),
+      api.getCategories()
+    ]);
+    res.render(`articles/post`, {article, categories});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }

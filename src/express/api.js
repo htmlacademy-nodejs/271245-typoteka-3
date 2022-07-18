@@ -27,6 +27,10 @@ class API {
     return this._load(`/articles/${id}`);
   }
 
+  async getCategories() {
+    return await this._load(`/category`);
+  }
+
   async createArticle(data) {
     return await this._load(`/articles`, {
       method: `POST`,

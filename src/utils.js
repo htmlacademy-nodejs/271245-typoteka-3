@@ -25,8 +25,11 @@ const createDate = (minDate, currentDate) => {
   }).format(range);
 };
 
+const ensureArray = (value) => Array.isArray(value) ? value : [value];
+
 module.exports = {
   getRandomInt,
   shuffle,
   createDate,
+  ensureArray,
 };

@@ -1,9 +1,2 @@
-PUT  http://localhost:3000/api/v1/articles/PCYIl7 HTTP/1.1
+GET  http://localhost:3000/api/v1/articles HTTP/1.1
 content-type: application/json
-
-{
-    "title": "Новый title",
-    "announce": "Новый анонс",
-    "fullText": "Новый текст",
-    "category": "Новая категория"
-}
