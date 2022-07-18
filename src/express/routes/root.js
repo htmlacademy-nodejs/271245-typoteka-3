@@ -19,8 +19,15 @@ rootRouter.get(`/login`, (_req, res) => {
   res.render(`join/login`);
 });
 
-rootRouter.get(`/search`, (_req, res) => {
-  res.render(`search/search`);
+rootRouter.get(`/search`, async (req, res) => {
+  const {query} = req.query;
+  const queryExist = typeof query !== `undefined`;
+  try {
+    const results = await api.search(query);
+    res.render(`search/search`, {results, queryExist});
+  } catch (err) {
+    res.render(`search/search`, {results: [], queryExist});
+  }
 });
 
 module.exports = rootRouter;

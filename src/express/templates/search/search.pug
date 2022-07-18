@@ -23,12 +23,27 @@ block header
     a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
 
 block main
+  - var noResult = queryExist && Object.keys(results).length === 0;
   main
     section.search-page
-      .search-page__wrapper
-        h1 Поиск
+      .search-page__wrapper(class=(noResult ? 'search-page__wrapper--empty' : ''))
+        h1
+          if !queryExist
+            | Поиск
+          else if noResult
+            | Попробуйте еще раз
+          else
+            | Результат поиска
         .search.search-page__form
-          form(action='#' method='get')
+          form(action='/search' method='get')
             label
               input(type='text' name='query' placeholder='Что ищем?')
             button.search__button.button.button--transparent(type='submit') Найти
+          if queryExist
+            if Object.keys(results).length > 0
+                each result in results
+                  .search__result
+                    time.search__date(datetime=result.createdDate) #{result.createdDate}
+                    a.search__link(href='#') #{result.title}
+                else
+                  p.search-page__empty Ничего не нашлось
