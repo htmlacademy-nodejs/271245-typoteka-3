@@ -1,6 +1,7 @@
 'use strict';
 // /articles;
 
+const asyncHandler = require(`express-async-handler`);
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
@@ -25,16 +26,16 @@ const storage = multer.diskStorage({
 const api = getAPI();
 const upload = multer({storage});
 
-articlesRouter.get(`/add`, upload.single(`article_img_upload`), async (_req, res) => {
+articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(async (_req, res) => {
   try {
     const categories = await api.getCategories();
     res.render(`articles/post`, {categories});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
-});
+}));
 
-articlesRouter.post(`/add`, upload.single(`article_img_upload`), async (req, res) => {
+articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
   const {date, title, announcement, category} = req.body;
   const articleData = {
     picture: req.file.filename,
@@ -51,13 +52,13 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), async (req, res
   } catch (err) {
     res.redirect(`back`);
   }
-});
+}));
 
 articlesRouter.get(`/:id`, (_req, res) => {
   res.render(`articles/post-detail`);
 });
 
-articlesRouter.get(`/edit/:id`, async (req, res) => {
+articlesRouter.get(`/edit/:id`, asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
     const [article, categories] = await Promise.all([
@@ -68,7 +69,7 @@ articlesRouter.get(`/edit/:id`, async (req, res) => {
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
-});
+}));
 
 articlesRouter.get(`/category/:id`, (_req, res) => {
   res.render(`articles/articles-by-category`);
