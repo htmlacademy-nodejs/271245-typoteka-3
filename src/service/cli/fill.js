@@ -8,7 +8,8 @@ const {ExitCode} = require(`../../constans.js`);
 const DEFAULT_COUNT = 1;
 const PUBLICATION_MAX_COUNT = 1000;
 const ANNOUNCE_MAX_COUNT = 5;
-const FULL_TEXT_MAX_COUNT = ANNOUNCE_MAX_COUNT;
+const FULL_TEXT_MAX_COUNT = 5;
+const CATEGORY_MAX_COUNT = 5;
 const COMMENTS_MAX_COUNT = 4;
 const FILE_NAME = `./db/fill-db.sql`;
 const TITLE_FILE_PATH = `./data/titles.txt`;
@@ -59,13 +60,18 @@ const createComments = (commentCount, commentList, publicationIid, userCount) =>
   }));
 };
 
+const createCategory = (categoryCount) => {
+  let categiries = new Array(getRandomInt(1, CATEGORY_MAX_COUNT)).fill(null).map(() => getRandomInt(1, categoryCount));
+  return [...new Set(categiries)];
+};
+
 const generatePublication = (count, titles, sentences, comments, categoryCount, userCount) => {
   return Array(count).fill({}).map((_, index) => ({
     userId: getRandomInt(1, userCount),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0, getRandomInt(1, ANNOUNCE_MAX_COUNT)).join(` `),
     fullText: shuffle(sentences).slice(0, getRandomInt(0, FULL_TEXT_MAX_COUNT)).join(` `),
-    category: [getRandomInt(1, categoryCount)],
+    category: createCategory(categoryCount),
     comments: createComments(getRandomInt(1, COMMENTS_MAX_COUNT), comments, index + 1, userCount),
   }));
 };
@@ -121,10 +127,18 @@ module.exports = {
 
     const publications = generatePublication(countPublications, titleList, sentencesList, commentList, categoryList.length, userList.length);
     const comments = publications.flatMap((publication) => publication.comments);
-    const categoriesPublications = publications.map((publication, index) => ({
-      publicationIid: index + 1,
-      categoryId: publication.category[0]
-    }));
+    const categoriesPublications = publications.reduce((acc, item, index) => {
+      item.category.forEach((category) => {
+        acc.push({
+          publicationIid: index + 1,
+          categoryId: category
+        });
+      });
+      return acc;
+    }, []);
+
+    console.log(publications);
+    console.log(categoriesPublications);
 
     const userValues = userList.map((user) => `('${user.email}', '${user.passwordHash}', '${user.firstName}', '${user.lastName}', '${user.avatar}')`).join(`,\n`);
     const categoryValues = categoryList.map((title) => `('${title}')`).join(`,\n`);
