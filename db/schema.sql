@@ -23,8 +23,8 @@ CREATE TABLE publications(
   title varchar(250) NOT NULL,
 	picture varchar(255),
 	created_at timestamp DEFAULT current_timestamp,
-	announcement varchar(250) NOT NULL,
-	main_text varchar(1000),
+	announcement varchar(500) NOT NULL,
+	main_text varchar(1500),
 	user_id integer NOT NULL,  
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
