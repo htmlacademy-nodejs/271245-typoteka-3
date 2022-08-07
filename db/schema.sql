@@ -4,11 +4,6 @@ DROP TABLE IF EXISTS publications CASCADE;
 DROP TABLE IF EXISTS categories_publications CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
 
-CREATE TABLE categories(
-	id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title varchar(30) UNIQUE NOT NULL
-);
-
 CREATE TABLE users(
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   email varchar(255) UNIQUE NOT NULL,
@@ -16,6 +11,11 @@ CREATE TABLE users(
   firstname varchar(255) NOT NULL,
   lastname varchar(255) NOT NULL,
   avatar varchar(255)
+);
+
+CREATE TABLE categories(
+	id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title varchar(60) UNIQUE NOT NULL
 );
 
 CREATE TABLE publications(
