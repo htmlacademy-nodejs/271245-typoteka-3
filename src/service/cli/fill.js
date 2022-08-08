@@ -137,9 +137,6 @@ module.exports = {
       return acc;
     }, []);
 
-    console.log(publications);
-    console.log(categoriesPublications);
-
     const userValues = userList.map((user) => `('${user.email}', '${user.passwordHash}', '${user.firstName}', '${user.lastName}', '${user.avatar}')`).join(`,\n`);
     const categoryValues = categoryList.map((title) => `('${title}')`).join(`,\n`);
     const publicationValues = publications.map((publication) =>`('${publication.title}', ${generatePublicationPicture()}, '${publication.announce}', '${publication.fullText}', ${publication.userId})`).join(`,\n`);
