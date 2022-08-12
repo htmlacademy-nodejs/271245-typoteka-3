@@ -16,7 +16,7 @@ SELECT categories.id AS "Category ID",
   categories.title AS "Category name", 
   COUNT(categories_publications.category_id) AS "Publication quantity in category"
 FROM categories_publications 
-  INNER JOIN categories ON categories_publications.category_id = categories.id
+  RIGHT JOIN categories ON categories_publications.category_id = categories.id
 GROUP BY categories.id, categories.title
 ORDER BY id ASC;
 
