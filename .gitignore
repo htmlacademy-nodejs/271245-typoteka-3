@@ -22,3 +22,6 @@ src/express/upload/img/*.*
 
 # Прочее
 mock.json
+
+# Перенменные окружения
+.env
