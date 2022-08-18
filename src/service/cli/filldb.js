@@ -115,6 +115,5 @@ module.exports = {
       await publicationModel.addCategories(publication.category, {});
     });
     await Promise.all(publicationPromises);
-    // console.log(publications);
   },
 };

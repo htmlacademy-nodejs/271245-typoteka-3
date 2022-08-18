@@ -11,8 +11,9 @@ const setArticlesController = (app, articleService, commentsService) => {
 
   app.use(`/articles`, articlesRoute);
 
-  articlesRoute.get(`/`, async (_req, res) => {
-    const allArticles = await articleService.findAll();
+  articlesRoute.get(`/`, async (req, res) => {
+    const needCommentsFlag = req.query.comments;
+    const allArticles = await articleService.findAll(needCommentsFlag);
 
     return res.status(HttpCode.OK)
       .json(allArticles);
@@ -45,14 +46,18 @@ const setArticlesController = (app, articleService, commentsService) => {
     const articleId = req.params.articleId;
     const deletedArticle = await articleService.drop(articleId);
 
+    if (!deletedArticle) {
+      return res.status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
+
     return res.status(HttpCode.OK)
       .json(deletedArticle);
   });
 
   articlesRoute.get(`/:articleId/comments`, [articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
-    const pickedArticle = await articleService.findOne(articleId);
-    const allComments = await commentsService.findAll(pickedArticle);
+    const allComments = await commentsService.findAll(articleId);
 
     return res.status(HttpCode.OK)
       .json(allComments);
@@ -60,8 +65,7 @@ const setArticlesController = (app, articleService, commentsService) => {
 
   articlesRoute.post(`/:articleId/comments`, [articleAvailability(articleService), commentsValidation], async (req, res) => {
     const articleId = req.params.articleId;
-    const pickedArticle = await articleService.findOne(articleId);
-    const newComment = await commentsService.create(pickedArticle, req.body);
+    const newComment = await commentsService.create(articleId, req.body);
 
     return res.status(HttpCode.CREATED)
       .json(newComment);
@@ -69,12 +73,18 @@ const setArticlesController = (app, articleService, commentsService) => {
 
   articlesRoute.delete(`/:articleId/comments/:commentId`, [articleAvailability(articleService)], async (req, res) => {
     const {articleId, commentId} = req.params;
-    const pickedArticle = await articleService.findOne(articleId);
-    const deletedComment = await commentsService.drop(pickedArticle, commentId);
+    const existingComment = await commentsService.findOne(commentId, articleId);
 
-    if (!deletedComment) {
+    if (!existingComment) {
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
+    }
+
+    const deletedComment = await commentsService.drop(commentId);
+
+    if (!deletedComment) {
+      return res.status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
     }
 
     return res.status(HttpCode.OK)

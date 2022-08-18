@@ -1,46 +1,55 @@
 'use strict';
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../../constans.js`);
-const {createDate} = require(`../../utils.js`);
-
-const THREE_MONTH_TIMESTAMP = 86400000 * 7 * 4 * 3;
+const Aliase = require(`../models/aliase.js`);
 
 class ArticlesService {
-  constructor(articles) {
-    this._articles = articles;
+  constructor(sequelize) {
+    this._Publication = sequelize.models.Publication;
+    this._Comment = sequelize.models.Comment;
+    this._Category = sequelize.models.Category;
   }
 
-  create(article) {
-    const newArticle = Object.assign({id: nanoid(MAX_ID_LENGTH), comments: [], createdDate: createDate(Date.now() - THREE_MONTH_TIMESTAMP, Date.now())}, article);
-    this._articles.push(newArticle);
-    return newArticle;
+  async create(publicationData) {
+    const publication = await this._Publication.create(publicationData);
+    await publication.addCategories(publicationData.categories);
+    return publication.get();
   }
 
-  findAll() {
-    return this._articles;
+  async findAll(needCommentsFlag) {
+    const include = needCommentsFlag ? [Aliase.CATEGORIES] : [Aliase.CATEGORIES, Aliase.COMMENTS];
+
+    const publications = await this._Publication.findAll({
+      include,
+      order: [
+        [`createdAt`, `DESC`]
+      ]
+    });
+
+    return publications.map((item) => item.get());
   }
 
-  findOne(articleID) {
-    return this._articles.find((item) => item.id === articleID);
+  findOne(publicationId) {
+    return this._Publication.findByPk(publicationId, {
+      include: [Aliase.CATEGORIES],
+    });
   }
 
-  update(articleID, article) {
-    const oldArticle = this._articles.find((item) => item.id === articleID);
-
-    return Object.assign(oldArticle, article);
+  async update(publicationId, publicationData) {
+    const [modified] = await this._Publication.update(publicationData, {
+      where: {
+        id: publicationId,
+      }
+    });
+    return Boolean(modified);
   }
 
-  drop(articleID) {
-    const articleToDelete = this._articles.find((item) => item.id === articleID);
-
-    if (!articleToDelete) {
-      return null;
-    }
-
-    this._articles = this._articles.filter((item) => item.id !== articleID);
-
-    return articleToDelete;
+  async drop(publicationId) {
+    const deletedRows = await this._Publication.destroy({
+      where: {
+        id: publicationId,
+      }
+    });
+    return Boolean(deletedRows);
   }
 }
 

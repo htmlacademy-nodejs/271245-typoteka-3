@@ -17,7 +17,7 @@ const defineAllModel = (sequelize) => {
 
   Publication.belongsToMany(Category, {through: PublicationCategory, as: Aliase.CATEGORIES, foreignKey: `publicationId`});
   Category.belongsToMany(Publication, {through: PublicationCategory, as: Aliase.PUBLICATIONS, foreignKey: `categoryId`});
-  Category.hasMany(PublicationCategory, {as: Aliase.PUBLICATION_CATEGORIES, foreignKey: `categoryId`});// !!!!!!!!!!!!!!!!??????????????
+  Category.hasMany(PublicationCategory, {as: Aliase.PUBLICATION_CATEGORIES, foreignKey: `categoryId`}); // !!!!!!!!!!!!!!!!??????????????
 
   return {
     Category,
@@ -29,4 +29,4 @@ const defineAllModel = (sequelize) => {
 
 module.exports = defineAllModel;
 
-// Попробуйте выполнить сценарий --filldb
+// Изменений на фронтенде не слишком много

@@ -2,7 +2,7 @@
 
 const {HttpCode} = require(`../../constans.js`);
 
-const commentKeys = [`text`, `id`];
+const commentKeys = [`text`];
 
 const commentsValidation = (req, res, next) => {
   const newComment = req.body;
