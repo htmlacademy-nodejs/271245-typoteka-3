@@ -3,15 +3,15 @@
 const {DataTypes, Model} = require(`sequelize`);
 
 const CommentValidation = {
-  MIN_LENGTH: 20,
-  MAX_LENGTH: 1000,
+  MIN_LENGTH: 1, // need 20
+  MAX_LENGTH: 10000, // need 1000
 };
 
 class Comment extends Model {}
 
 const defineModel = (sequelize) => {
   return Comment.init({
-    mainText: {
+    text: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

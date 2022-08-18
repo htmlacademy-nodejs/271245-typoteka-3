@@ -3,8 +3,8 @@
 const {DataTypes, Model} = require(`sequelize`);
 
 const CategoryValidation = {
-  MIN_LENGTH: 5,
-  MAX_LENGTH: 30,
+  MIN_LENGTH: 5, // need 50
+  MAX_LENGTH: 300,
 };
 
 class Category extends Model {}
