@@ -2,7 +2,7 @@
 
 const {HttpCode} = require(`../../constans.js`);
 
-const articleKeys = [`title`, `announcement`, `mainText`, `category`];
+const articleKeys = [`title`, `announcement`, `mainText`, `categories`];
 
 const articleValidation = (req, res, next) => {
   const newArticle = req.body;

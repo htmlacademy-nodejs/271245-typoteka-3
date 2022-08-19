@@ -36,14 +36,14 @@ articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(asy
 }));
 
 articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
-  const {date, title, announcement, category} = req.body;
+  const {title, announcement, category} = req.body;
   const articleData = {
-    picture: req.file.filename,
-    createdDate: date,
+    // eslint-disable-next-line new-cap
+    picture: req?.file?.filename ?? null,
     title,
-    announce: announcement,
-    fullText: req.body[`full-text`],
-    category: ensureArray(category),
+    announcement,
+    mainText: req.body[`full-text`],
+    categories: ensureArray(category),
   };
 
   try {
@@ -54,18 +54,17 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
   }
 }));
 
-articlesRouter.get(`/:id`, (_req, res) => {
-  res.render(`articles/post-detail`);
-});
+articlesRouter.get(`/:id`, asyncHandler(async (req, res) => {
+  const {id} = req.params;
+  const article = await api.getArticle(id);
+  res.render(`articles/post-detail`, {article});
+}));
 
 articlesRouter.get(`/edit/:id`, asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
-    const [article, categories] = await Promise.all([
-      api.getArticle(id),
-      api.getCategories()
-    ]);
-    res.render(`articles/post`, {article, categories});
+    const article = await api.getArticle(id);
+    res.render(`articles/post`, {article});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }

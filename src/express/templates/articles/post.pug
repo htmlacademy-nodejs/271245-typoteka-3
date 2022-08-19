@@ -21,6 +21,7 @@ block header
 
 block main
   - var articleExists = typeof article !== 'undefined' && Object.keys(article).length > 0;
+  - var categories = typeof categories !== 'undefined' ? categories : article.categories;
   main
     section
       .popup.popup--new-publication.popup--anti
@@ -51,15 +52,15 @@ block main
                     button.button.button--transparent
                       | Удалить
                 .new-publication__category-wrapper
-                  each category, categoryIndex in categories
+                  each category in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
-                      input(type='checkbox' name=`category` id=`category-${categoryIndex}` value=category checked=(articleExists && article.category.includes(category)))
-                      label(for=`category-${categoryIndex}`) #{category}
+                      input(type='checkbox' name=`category` id=`category-${category.id}` value=category.id checked=(articleExists))
+                      label(for=`category-${category.id}`) #{category.title}
                   a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='5' name='announcement' required='' placeholder='Анонс публикации') #{articleExists ? article.announce : ''}
+                    textarea(rows='5' name='announcement' required='' placeholder='Анонс публикации') #{articleExists ? article.announcement : ''}
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации') #{articleExists ? article.fullText : ''}
+                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации') #{articleExists ? article.mainText : ''}

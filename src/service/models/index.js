@@ -29,4 +29,4 @@ const defineAllModel = (sequelize) => {
 
 module.exports = defineAllModel;
 
-// Прочие изменения касаются категорий
+// В этом задании реализуем ещё одну часть технического задания

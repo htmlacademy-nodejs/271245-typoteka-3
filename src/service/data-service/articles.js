@@ -16,7 +16,7 @@ class ArticlesService {
   }
 
   async findAll(needCommentsFlag) {
-    const include = needCommentsFlag ? [Aliase.CATEGORIES] : [Aliase.CATEGORIES, Aliase.COMMENTS];
+    const include = needCommentsFlag ? [Aliase.CATEGORIES, Aliase.COMMENTS] : [Aliase.CATEGORIES];
 
     const publications = await this._Publication.findAll({
       include,
@@ -30,7 +30,7 @@ class ArticlesService {
 
   findOne(publicationId) {
     return this._Publication.findByPk(publicationId, {
-      include: [Aliase.CATEGORIES],
+      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
     });
   }
 
