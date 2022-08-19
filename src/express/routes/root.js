@@ -8,9 +8,12 @@ const rootRouter = new Router();
 const api = getAPI();
 
 rootRouter.get(`/`, asyncHandler(async (_req, res) => {
-  const articles = await api.getArticles();
-  console.log(articles);
-  res.render(`welcome/main`, {articles});
+  const [
+    articles,
+    categories
+  ] = await Promise.all([api.getArticles(), api.getCategories(true)]);
+
+  res.render(`welcome/main`, {articles, categories});
 }));
 
 rootRouter.get(`/register`, (_req, res) => {

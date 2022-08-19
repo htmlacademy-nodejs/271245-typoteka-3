@@ -35,8 +35,10 @@ class API {
     });
   }
 
-  async getCategories() {
-    return await this._load(`/category`);
+  async getCategories(count) {
+    return await this._load(`/category`, {
+      params: {count}
+    });
   }
 
   async createArticle(data) {
