@@ -43,7 +43,7 @@ block main
             if Object.keys(results).length > 0
                 each result in results
                   .search__result
-                    time.search__date(datetime=result.createdDate) #{result.createdDate}
+                    time.search__date(datetime=result.createdAt) #{result.createdAt}
                     a.search__link(href='#') #{result.title}
                 else
                   p.search-page__empty Ничего не нашлось
