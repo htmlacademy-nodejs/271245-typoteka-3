@@ -14,7 +14,9 @@ myRouter.get(`/`, asyncHandler(async (_req, res) => {
 }));
 
 myRouter.get(`/comments`, asyncHandler(async (_req, res) => {
-  const articles = await api.getArticles();
+  const articles = await api.getArticles({
+    comments: true,
+  });
   res.render(`admin_activity/comments`, {articles});
 }));
 

@@ -29,4 +29,4 @@ const defineAllModel = (sequelize) => {
 
 module.exports = defineAllModel;
 
-// Изменений на фронтенде не слишком много
+// Прочие изменения касаются категорий
