@@ -35,7 +35,7 @@ block main
               each category in article.categories
                 li.themes__item
                   a.themes__item-link(href='#') #{category.title}
-                    sup 88
+                    sup #{category.count}
                   button.themes__remove-btn(type='button') Удалить категорию
           if article.picture
             .post__picture

@@ -1,5 +1,6 @@
 'use strict';
 
+const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase.js`);
 
 class ArticlesService {
@@ -7,6 +8,7 @@ class ArticlesService {
     this._Publication = sequelize.models.Publication;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
+    this._PublicationCategory = sequelize.models.PublicationCategory;
   }
 
   async create(publicationData) {
@@ -28,10 +30,36 @@ class ArticlesService {
     return publications.map((item) => item.get());
   }
 
-  findOne(publicationId) {
-    return this._Publication.findByPk(publicationId, {
-      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
-    });
+  async findOne(publicationId) {
+    // return this._Publication.findByPk(publicationId, {
+    //   include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+    // });
+
+    const article = await this._Publication.findByPk(publicationId);
+    const comments = await article.getComments();
+    const categories = await article.getCategories();
+
+    const mappedCategories = await Promise.all(categories.map(async (item) => {
+      let count = await item.getPublicationCategories({
+        raw: true,
+        attributes: [
+          `categoryId`,
+          [Sequelize.fn(`COUNT`, `publicationId`), `count`]
+        ],
+        group: [Sequelize.col(`categoryId`)],
+      });
+
+      return {
+        ...item.get(),
+        count: count[0].count,
+      };
+    }));
+
+    return {
+      ...article.get(),
+      comments: comments.map((comment) => comment.get()),
+      categories: mappedCategories,
+    };
   }
 
   async update(publicationId, publicationData) {
