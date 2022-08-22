@@ -8,6 +8,7 @@ const {getLogger} = require(`../lib/logger.js`);
 const {readFile} = require(`fs`).promises;
 const {getRandomInt, shuffle} = require(`../../utils.js`);
 const {ExitCode} = require(`../../constans.js`);
+const initDatabase = require(`../lib/init-db.js`);
 
 const DEFAULT_COUNT = 1;
 const PUBLICATION_MAX_COUNT = 1000;
@@ -100,20 +101,10 @@ module.exports = {
       process.exit(ExitCode.ERROR);
     }
 
-    const {Category, Publication} = defineAllModel(sequelize);
-    await sequelize.sync({force: true});
-
     const [titleList, categoryList, sentencesList, commentList] = await getContentMatrix();
 
-    const categoryDBValues = categoryList.map((item) => ({title: item}));
-    const categoryModels = await Category.bulkCreate(categoryDBValues);
+    const publications = generatePublication(countPublications, titleList, sentencesList, commentList, categoryList, userList.length);
 
-    const publications = generatePublication(countPublications, titleList, sentencesList, commentList, categoryModels, userList.length);
-
-    const publicationPromises = publications.map(async (publication) => {
-      const publicationModel = await Publication.create(publication, {include: [Aliase.COMMENTS]});
-      await publicationModel.addCategories(publication.category, {});
-    });
-    await Promise.all(publicationPromises);
+    initDatabase(sequelize, {publications, categoryList});
   },
 };
