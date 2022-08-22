@@ -15,8 +15,6 @@ module.exports = async (sequelize, {categoryList, publications}) => {
     ...acc
   }), {});
 
-  console.log(categoryIdByName);
-
   const publicationPromises = publications.map(async (publication) => {
     const publicationModel = await Publication.create(publication, {include: [Aliase.COMMENTS]});
     await publicationModel.addCategories(publication.category.map((title) => categoryIdByName[title]));
