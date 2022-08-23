@@ -5,7 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "jest": "jest",
-    "test": "npm run jest",
+    "test": "npm run eslint && npm run jest",
     "eslint": "eslint --ext .js src/",
     "start": "cross-env NODE_ENV=production node -r dotenv/config ./src/service/service.js",
     "start::debug": "cross-env NODE_ENV=development node -r dotenv/config ./src/service/service.js",

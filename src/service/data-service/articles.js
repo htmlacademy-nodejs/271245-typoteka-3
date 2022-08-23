@@ -1,6 +1,6 @@
 'use strict';
 
-const Sequelize = require(`sequelize`);
+// const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase.js`);
 
 class ArticlesService {
@@ -35,6 +35,23 @@ class ArticlesService {
       include: [Aliase.CATEGORIES, Aliase.COMMENTS],
     });
 
+    // return this._Publication.findByPk(publicationId, {
+    //   include: [{
+    //     attributes: [
+    //       `id`,
+    //       `title`,
+    //       [Sequelize.fn(`COUNT`, `id`), `count`]
+    //     ],
+    //     group: [Sequelize.col(`Category.id`)],
+    //     include: [{
+    //       model: this._PublicationCategory,
+    //       as: Aliase.PUBLICATION_CATEGORIES,
+    //       attributes: []
+    //     }]
+    //   }, Aliase.COMMENTS],
+    // });
+
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // const article = await this._Publication.findByPk(publicationId);
     // const comments = await article.getComments();
     // const categories = await article.getCategories();

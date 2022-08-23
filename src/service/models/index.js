@@ -29,4 +29,3 @@ const defineAllModel = (sequelize) => {
 
 module.exports = defineAllModel;
 
-// Следующим действием обновим шаблон компонента категорий

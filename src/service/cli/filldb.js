@@ -1,8 +1,6 @@
 'use strict';
 
 const sequelize = require(`../lib/sequelize.js`);
-const defineAllModel = require(`../models`);
-const Aliase = require(`../models/aliase.js`);
 
 const {getLogger} = require(`../lib/logger.js`);
 const {readFile} = require(`fs`).promises;

@@ -6,8 +6,8 @@ const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db.js`);
 const {HttpCode} = require(`../../constans.js`);
-const articles = require(`./articles.js`);
-const {ArticlesService, CommentsService} = require(`../data-service`);
+const search = require(`./search.js`);
+const {SearchService} = require(`../data-service`);
 
 const mockCategories = [`Деревья`, `Кино`, `Крипта`, `Про игры`, `Музыка`];
 
@@ -19,6 +19,7 @@ const mockData = [
     "category": [`Деревья`],
     "comments": [
       {"text": `Совсем немного... Планируете записать видосик на эту тему?`},
+      {"text": `Планируете записать видосик на эту тему?`}
     ]
   },
   {
@@ -37,6 +38,7 @@ const mockData = [
     "category": [`Про игры`, `Музыка`],
     "comments": [
       {"text": `Давно не пользуюсь стационарными компьютерами. Ноутбуки победили. Мне не нравится ваш стиль. Ощущение, что вы меня поучаете.`},
+      {"text": `Совсем немного...`}
     ]
   },
   {
@@ -46,6 +48,8 @@ const mockData = [
     "category": [`Крипта`, `Про игры`, `Музыка`],
     "comments": [
       {"text": `Совсем немного...`},
+      {"text": `Плюсую, но слишком много буквы! Хочу такую же футболку :-)`},
+      {"text": `Мне кажется или я уже читал это где-то?`}
     ]
   },
   {
@@ -54,269 +58,58 @@ const mockData = [
     "mainText": `Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. В лесу родилась елочка, в лесу она росла Достичь успеха помогут ежедневные повторения. Он написал больше 30 хитов. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Как начать действовать? Для начала просто соберитесь. С другой стороны рамки и место обучения кадров способствует подготовки и реализации модели развития. Из под его пера вышло 8 платиновых альбомов. С другой стороны постоянное информационно-пропагандистское обеспечение нашей деятельности обеспечивает широкому кругу (специалистов) участие в формировании позиций, занимаемых участниками в отношении поставленных задач. Ёлки — это не просто красивое дерево. Это прочная древесина. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Не следует, однако забывать, что дальнейшее развитие различных форм деятельности способствует подготовки и реализации форм развития. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Собрать камни бесконечности легко, если вы прирожденный герой. Это один из лучших рок-музыкантов. Простые ежедневные упражнения помогут достичь успеха. Я часто что-то читаю, но часто ничего не понимаю. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете. Первая большая ёлка была установлена только в 1938 году.`,
     "category": [`Деревья`, `Крипта`, `Музыка`],
     "comments": [
+      {"text": `Хочу такую же футболку :-) Мне кажется или я уже читал это где-то?`},
+      {"text": `Мне не нравится ваш стиль. Ощущение, что вы меня поучаете. Планируете записать видосик на эту тему? Мне кажется или я уже читал это где-то?`},
       {"text": `Планируете записать видосик на эту тему? Мне кажется или я уже читал это где-то? Давно не пользуюсь стационарными компьютерами. Ноутбуки победили.`}
     ]
   }
 ];
 
-const createAPI = async () => {
-  const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+
+const app = express();
+app.use(express.json());
+
+beforeAll(async () => {
   await initDB(mockDB, {categoryList: mockCategories, publications: mockData});
-  const app = express();
-  app.use(express.json());
-  articles(app, new ArticlesService(mockDB), new CommentsService(mockDB));
-  return app;
-};
+  search(app, new SearchService(mockDB));
+});
 
-describe(`API returns a list of all articles`, () => {
-  const ARTICLE_QUANTITY = 5;
-  // const FIRST_ARTICLE_TITLE = `А пользоваться сторонними сервисами лень`;
-  let app;
+describe(`API returns article based on search query`, () => {
+  const MIN_ARTICLE_QUANTITY = 1;
+  const ARTICLE_TITLE_PART = `Как собрать камни`;
   let response;
 
   beforeAll(async () => {
-    app = await createAPI();
     response = await request(app)
-      .get(`/articles`);
+      .get(`/search`)
+      .query({
+        query: ARTICLE_TITLE_PART
+      });
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Returns a list of ${ARTICLE_QUANTITY} articles`, () => expect(response.body.length).toBe(ARTICLE_QUANTITY));
+  test(`${MIN_ARTICLE_QUANTITY} article found`, () => expect(response.body.length).toBe(1));
 
-  // test(`First article's title equals "${FIRST_ARTICLE_TITLE}"`, () => expect(response.body[0].title).toBe(FIRST_ARTICLE_TITLE));
+  test(`Article has correct title`, () => expect(response.body[0].title).toBe(`${ARTICLE_TITLE_PART} бесконечности`));
 });
 
-describe(`API returns an article with given id`, () => {
-  const ARTICLE_ID = 5;
-  // const ARTICLE_TITLE = `Как собрать камни бесконечности`;
-  let app;
-  let response;
+describe(`API returns 4** code`, () => {
 
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .get(`/articles/${ARTICLE_ID}`);
+  test(`404 if nothing is found`, async () => {
+    const response = await request(app)
+      .get(`/search`)
+      .query({
+        query: `Lorem ipsum dolor sit amet`
+      });
+    expect(response.statusCode).toBe(HttpCode.NOT_FOUND);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  // test(`Article's title is "${ARTICLE_TITLE}"`, () => expect(response.body.title).toBe(ARTICLE_TITLE));
-});
-
-describe(`API creates an article if data is valid`, () => {
-  const newArticle = {
-    title: `Новый title`,
-    announcement: `Новый анонс`,
-    mainText: `Новый текст`,
-    categories: [1, 2],
-  };
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .post(`/articles`)
-      .send(newArticle);
+  test(`400 when query string is absent`, async () => {
+    const response = await request(app)
+      .get(`/search`);
+    expect(response.statusCode).toBe(HttpCode.BAD_REQUEST);
   });
 
-  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
-
-  test(`Articles count is changed`, () => {
-    return request(app).get(`/articles`).expect((res) => expect(res.body.length).toBe(mockData.length + 1));
-  });
-});
-
-describe(`API refuses to create an article if data is invalid`, () => {
-  const newArticle = {
-    title: `Новый title`,
-    announce: `Новый анонс`,
-    mainText: `Новый текст`,
-    categories: [1, 2],
-  };
-  let app;
-
-  test(`Without any required property response code is 400`, async () => {
-    app = await createAPI();
-    for (const key of Object.keys(newArticle)) {
-      const badArticle = {...newArticle};
-      delete badArticle[key];
-      await request(app)
-        .post(`/articles`)
-        .send(badArticle)
-        .expect(HttpCode.BAD_REQUEST);
-    }
-  });
-});
-
-describe(`API changes existing article - positive cases`, () => {
-  const ARTICLE_ID = 1;
-  const newArticle = {
-    title: `Новый title`,
-    announcement: `Новый анонс`,
-    mainText: `Новый текст`,
-    categories: [1, 2],
-  };
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .put(`/articles/${ARTICLE_ID}`)
-      .send(newArticle);
-  });
-
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Returns changed article`, () => expect(response.body).toEqual(true));
-
-  test(`article is really changed`, () => request(app)
-    .get(`/articles/${ARTICLE_ID}`)
-    .expect((res) => expect(res.body.title).toBe(newArticle.title))
-  );
-});
-
-describe(`API changes existing article - negative cases`, () => {
-  const ARTICLE_ID = 1;
-  const BAD_ARTICLE_ID = 666;
-  const newArticle = {
-    title: `Новый title`,
-    announcement: `Новый анонс`,
-    mainText: `Новый текст`,
-    categories: [1, 2],
-  };
-  const brokenArticlePayload = {
-    title: `Новый title`,
-    announcement: `Новый анонс`,
-    mainText: `Новый текст`,
-  };
-
-  test(`API returns status code 404 when trying to change non-existent article`, async () => {
-    const app = await createAPI();
-
-    return request(app)
-      .put(`/articles/${BAD_ARTICLE_ID}`)
-      .send(newArticle)
-      .expect(HttpCode.NOT_FOUND);
-  });
-
-  test(`API returns status code 400 when trying to change an article with invalid payload`, async () => {
-    const app = await createAPI();
-
-    return request(app)
-      .put(`/articles/${ARTICLE_ID}`)
-      .send(brokenArticlePayload)
-      .expect(HttpCode.BAD_REQUEST);
-  });
-});
-
-describe(`Delete the article - positive cases`, () => {
-  const ARTICLE_ID = 3;
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .delete(`/articles/${ARTICLE_ID}`);
-  });
-
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Returns deleted article`, () => expect(response.body).toBe(true));
-
-  test(`Article count is 4 now`, async () => {
-    let res = await request(app).get(`/articles`);
-    return expect(res.body.length).toBe(4);
-  });
-});
-
-describe(`Delete the article - negative cases`, () => {
-  const BAD_ARTICLE_ID = 666;
-  let app;
-
-  test(`API refuses to delete non-existent article`, async () => {
-    app = await createAPI();
-    return request(app)
-      .delete(`/articles/${BAD_ARTICLE_ID}`)
-      .expect(HttpCode.NOT_FOUND);
-  });
-});
-
-describe(`API creates a comment if data is valid`, () => {
-  const newComment = {
-    text: `Валидный комментарий`
-  };
-  const ARTICLE_ID = 1;
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .post(`/articles/${ARTICLE_ID}/comments`)
-      .send(newComment);
-  });
-
-  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
-
-  test(`Comments count is changed`, () => request(app)
-    .get(`/articles/${ARTICLE_ID}/comments`)
-    .expect((res) => expect(res.body.length).toBe(2))
-  );
-
-});
-
-test(`API refuses to create a comment to non-existent article and returns status code 404`, async () => {
-  const BAD_ARTICLE_ID = 666;
-  const app = await createAPI();
-
-  return request(app)
-    .post(`/articles/${BAD_ARTICLE_ID}/comments`)
-    .send({
-      text: `Разницы нет, все равно запнется на не существующей статье`
-    })
-    .expect(HttpCode.NOT_FOUND);
-});
-
-describe(`API correctly deletes a comment`, () => {
-  const ARTICLE_ID = 1;
-  const COMENT_ID = 1;
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .delete(`/articles/${ARTICLE_ID}/comments/${COMENT_ID}`);
-  });
-
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Comments count is 1 now`, () => request(app)
-    .get(`/articles/${ARTICLE_ID}/comments`)
-    .expect((res) => expect(res.body.length).toBe(0))
-  );
-});
-
-test(`API refuses to delete non-existent comment`, async () => {
-  const ARTICLE_ID = 2;
-  const BAD_COMMENT_ID = 666;
-  const app = await createAPI();
-
-  return request(app)
-    .delete(`/articles/${ARTICLE_ID}/comments/${BAD_COMMENT_ID}`)
-    .expect(HttpCode.NOT_FOUND);
-});
-
-test(`API refuses to delete a comment to non-existent article`, async () => {
-  const BAD_ARTICLE_ID = 666;
-  const COMMENT_ID = 1;
-  const app = await createAPI();
-
-  return request(app)
-    .delete(`/articles/${BAD_ARTICLE_ID}/comments/${COMMENT_ID}`)
-    .expect(HttpCode.NOT_FOUND);
 });
