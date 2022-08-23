@@ -31,35 +31,35 @@ class ArticlesService {
   }
 
   async findOne(publicationId) {
-    // return this._Publication.findByPk(publicationId, {
-    //   include: [Aliase.CATEGORIES, Aliase.COMMENTS],
-    // });
+    return this._Publication.findByPk(publicationId, {
+      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+    });
 
-    const article = await this._Publication.findByPk(publicationId);
-    const comments = await article.getComments();
-    const categories = await article.getCategories();
+    // const article = await this._Publication.findByPk(publicationId);
+    // const comments = await article.getComments();
+    // const categories = await article.getCategories();
 
-    const mappedCategories = await Promise.all(categories.map(async (item) => {
-      let count = await item.getPublicationCategories({
-        raw: true,
-        attributes: [
-          `categoryId`,
-          [Sequelize.fn(`COUNT`, `publicationId`), `count`]
-        ],
-        group: [Sequelize.col(`categoryId`)],
-      });
+    // const mappedCategories = await Promise.all(categories.map(async (item) => {
+    //   let count = await item.getPublicationCategories({
+    //     raw: true,
+    //     attributes: [
+    //       `categoryId`,
+    //       [Sequelize.fn(`COUNT`, `publicationId`), `count`]
+    //     ],
+    //     group: [Sequelize.col(`categoryId`)],
+    //   });
 
-      return {
-        ...item.get(),
-        count: count[0].count,
-      };
-    }));
+    //   return {
+    //     ...item.get(),
+    //     count: count[0].count,
+    //   };
+    // }));
 
-    return {
-      ...article.get(),
-      comments: comments.map((comment) => comment.get()),
-      categories: mappedCategories,
-    };
+    // return {
+    //   ...article.get(),
+    //   comments: comments.map((comment) => comment.get()),
+    //   categories: mappedCategories,
+    // };
   }
 
   async update(publicationId, publicationData) {
