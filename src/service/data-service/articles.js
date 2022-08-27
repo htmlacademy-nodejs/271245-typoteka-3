@@ -1,6 +1,6 @@
 'use strict';
 
-// const Sequelize = require(`sequelize`);
+const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase.js`);
 
 class ArticlesService {
@@ -30,53 +30,37 @@ class ArticlesService {
     return publications.map((item) => item.get());
   }
 
-  async findOne(publicationId) {
-    return this._Publication.findByPk(publicationId, {
+  async findOne({publicationId, needCategoriesCount}) {
+    let categories;
+    let data = await this._Publication.findByPk(publicationId, {
       include: [Aliase.CATEGORIES, Aliase.COMMENTS],
     });
+    data = data.toJSON();
 
-    // return this._Publication.findByPk(publicationId, {
-    //   include: [{
-    //     attributes: [
-    //       `id`,
-    //       `title`,
-    //       [Sequelize.fn(`COUNT`, `id`), `count`]
-    //     ],
-    //     group: [Sequelize.col(`Category.id`)],
-    //     include: [{
-    //       model: this._PublicationCategory,
-    //       as: Aliase.PUBLICATION_CATEGORIES,
-    //       attributes: []
-    //     }]
-    //   }, Aliase.COMMENTS],
-    // });
+    if (needCategoriesCount) {
+      categories = await this._Category.findAll({
+        where: {
+          id: data.categories.map((item) => item.id),
+        },
+        attributes: [
+          `id`,
+          `title`,
+          [Sequelize.fn(`COUNT`, `id`), `count`]
+        ],
+        group: [Sequelize.col(`Category.id`)],
+        include: [{
+          model: this._PublicationCategory,
+          as: Aliase.PUBLICATION_CATEGORIES,
+          attributes: []
+        }]
+      });
+      categories = categories.map((category) => category.get());
+    }
 
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    // const article = await this._Publication.findByPk(publicationId);
-    // const comments = await article.getComments();
-    // const categories = await article.getCategories();
-
-    // const mappedCategories = await Promise.all(categories.map(async (item) => {
-    //   let count = await item.getPublicationCategories({
-    //     raw: true,
-    //     attributes: [
-    //       `categoryId`,
-    //       [Sequelize.fn(`COUNT`, `publicationId`), `count`]
-    //     ],
-    //     group: [Sequelize.col(`categoryId`)],
-    //   });
-
-    //   return {
-    //     ...item.get(),
-    //     count: count[0].count,
-    //   };
-    // }));
-
-    // return {
-    //   ...article.get(),
-    //   comments: comments.map((comment) => comment.get()),
-    //   categories: mappedCategories,
-    // };
+    return {
+      ...data,
+      ...(needCategoriesCount && {categories}),
+    };
   }
 
   async update(publicationId, publicationData) {
