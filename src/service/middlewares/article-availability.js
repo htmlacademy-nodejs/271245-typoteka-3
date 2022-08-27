@@ -7,7 +7,7 @@ const articleAvailability = (service) => {
     const articleId = req.params.articleId;
     const pickedArticle = await service.findOne({publicationId: articleId});
 
-    if (!pickedArticle) {
+    if (Object.keys(pickedArticle).length === 0) {
       return res.status(HttpCode.NOT_FOUND)
         .send(`${articleId} - Not found`);
     }

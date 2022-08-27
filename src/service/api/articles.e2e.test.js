@@ -70,7 +70,7 @@ const createAPI = async () => {
 
 describe(`API returns a list of all articles`, () => {
   const ARTICLE_QUANTITY = 5;
-  // const FIRST_ARTICLE_TITLE = `А пользоваться сторонними сервисами лень`;
+  const FIRST_ARTICLE_TITLE = `А пользоваться сторонними сервисами лень`;
   let app;
   let response;
 
@@ -84,12 +84,12 @@ describe(`API returns a list of all articles`, () => {
 
   test(`Returns a list of ${ARTICLE_QUANTITY} articles`, () => expect(response.body.length).toBe(ARTICLE_QUANTITY));
 
-  // test(`First article's title equals "${FIRST_ARTICLE_TITLE}"`, () => expect(response.body[0].title).toBe(FIRST_ARTICLE_TITLE));
+  test(`First article's title equals "${FIRST_ARTICLE_TITLE}"`, () => expect(response.body[0].title).toBe(FIRST_ARTICLE_TITLE));
 });
 
 describe(`API returns an article with given id`, () => {
   const ARTICLE_ID = 5;
-  // const ARTICLE_TITLE = `Как собрать камни бесконечности`;
+  const ARTICLE_TITLE = `Как собрать камни бесконечности`;
   let app;
   let response;
 
@@ -101,7 +101,7 @@ describe(`API returns an article with given id`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  // test(`Article's title is "${ARTICLE_TITLE}"`, () => expect(response.body.title).toBe(ARTICLE_TITLE));
+  test(`Article's title is "${ARTICLE_TITLE}"`, () => expect(response.body.title).toBe(ARTICLE_TITLE));
 });
 
 describe(`API creates an article if data is valid`, () => {

@@ -38,7 +38,6 @@ articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(asy
 articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
   const {title, announcement, category} = req.body;
   const articleData = {
-    // eslint-disable-next-line new-cap
     picture: req?.file?.filename ?? null,
     title,
     announcement,
@@ -64,7 +63,7 @@ articlesRouter.get(`/edit/:id`, asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
     const article = await api.getArticle({publicationId: id, needCategoriesCount: true});
-    res.render(`articles/post`, article);
+    res.render(`articles/post`, {article});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }

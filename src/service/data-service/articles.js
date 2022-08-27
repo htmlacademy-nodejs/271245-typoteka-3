@@ -35,7 +35,7 @@ class ArticlesService {
     let data = await this._Publication.findByPk(publicationId, {
       include: [Aliase.CATEGORIES, Aliase.COMMENTS],
     });
-    data = data.toJSON();
+    data = data ? data.toJSON() : data;
 
     if (needCategoriesCount) {
       categories = await this._Category.findAll({
