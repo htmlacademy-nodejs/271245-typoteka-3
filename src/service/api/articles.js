@@ -28,7 +28,8 @@ const setArticlesController = (app, articleService, commentsService) => {
 
   articlesRoute.get(`/:articleId`, [articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
-    const pickedArticle = await articleService.findOne(articleId);
+    const needCategoriesCount = req.query.needCategoriesCount;
+    const pickedArticle = await articleService.findOne({publicationId: articleId, needCategoriesCount});
 
     return res.status(HttpCode.OK)
       .json(pickedArticle);

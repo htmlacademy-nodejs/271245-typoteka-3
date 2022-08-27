@@ -56,15 +56,15 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
 
 articlesRouter.get(`/:id`, asyncHandler(async (req, res) => {
   const {id} = req.params;
-  const article = await api.getArticle(id);
+  const article = await api.getArticle({publicationId: id, needCategoriesCount: true});
   res.render(`articles/post-detail`, {article});
 }));
 
 articlesRouter.get(`/edit/:id`, asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
-    const article = await api.getArticle(id);
-    res.render(`articles/post`, {article});
+    const article = await api.getArticle({publicationId: id, needCategoriesCount: true});
+    res.render(`articles/post`, article);
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }

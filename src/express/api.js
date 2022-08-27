@@ -25,8 +25,10 @@ class API {
     });
   }
 
-  getArticle(id) {
-    return this._load(`/articles/${id}`);
+  getArticle({publicationId, needCategoriesCount}) {
+    return this._load(`/articles/${publicationId}`, {
+      params: {needCategoriesCount},
+    });
   }
 
   search(query) {
