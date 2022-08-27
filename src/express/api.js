@@ -25,7 +25,7 @@ class API {
     });
   }
 
-  getArticle({publicationId, needCategoriesCount}) {
+  getArticle({publicationId, needCategoriesCount = false}) {
     return this._load(`/articles/${publicationId}`, {
       params: {needCategoriesCount},
     });
