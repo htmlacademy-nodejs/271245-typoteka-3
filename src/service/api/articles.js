@@ -12,11 +12,14 @@ const setArticlesController = (app, articleService, commentsService) => {
   app.use(`/articles`, articlesRoute);
 
   articlesRoute.get(`/`, async (req, res) => {
-    const needCommentsFlag = req.query.comments;
-    const allArticles = await articleService.findAll(needCommentsFlag);
-
-    return res.status(HttpCode.OK)
-      .json(allArticles);
+    const {offset, limit, comments: needCommentsFlag} = req.query;
+    let result;
+    if (limit || offset) {
+      result = await articleService.findPage({limit, offset});
+    } else {
+      result = await articleService.findAll(needCommentsFlag);
+    }
+    res.status(HttpCode.OK).json(result);
   });
 
   articlesRoute.post(`/`, [articleValidation], async (req, res) => {

@@ -63,6 +63,19 @@ class ArticlesService {
     };
   }
 
+  async findPage({limit, offset}) {
+    const {count, rows} = await this._Publication.findAndCountAll({
+      limit,
+      offset,
+      include: [Aliase.CATEGORIES],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+      distinct: true
+    });
+    return {count, articles: rows};
+  }
+
   async update(publicationId, publicationData) {
     const [modified] = await this._Publication.update(publicationData, {
       where: {
