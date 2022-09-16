@@ -6,7 +6,7 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const {HttpCode} = require(`../../constans.js`);
-const {ensureArray} = require(`../../utils.js`);
+const {ensureArray, prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const articlesRouter = new Router();
@@ -49,7 +49,10 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
     await api.createArticle(articleData);
     res.redirect(`/my`);
   } catch (err) {
-    res.redirect(`back`);
+    const validationMessages = prepareErrors(err);
+    const categories = await api.getCategories();
+    res.render(`articles/post`, {categories, validationMessages});
+    console.log(validationMessages);
   }
 }));
 

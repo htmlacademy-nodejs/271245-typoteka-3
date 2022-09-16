@@ -1,17 +1,24 @@
 'use strict';
 
+const Joi = require(`joi`);
 const {HttpCode} = require(`../../constans.js`);
 
-const commentKeys = [`text`];
+const ErrorCommentMessage = {
+  TEXT: `Комментарий содержит меньше 20 символов`
+};
+
+const schema = Joi.object({
+  text: Joi.string().min(20).required().messages({
+    'string.min': ErrorCommentMessage.TEXT
+  })
+});
 
 const commentsValidation = (req, res, next) => {
   const newComment = req.body;
-  const keys = Object.keys(newComment);
-  const keysExists = commentKeys.every((key) => keys.includes(key));
-
-  if (!keysExists) {
+  const {error} = schema.validate(newComment, {abortEarly: false});
+  if (error) {
     return res.status(HttpCode.BAD_REQUEST)
-      .send(`Bad request / Bad Comment Payload`);
+      .send(error.details.map((err) => err.message).join(`\n`));
   }
 
   return next();

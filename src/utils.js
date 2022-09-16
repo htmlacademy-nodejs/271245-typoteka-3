@@ -27,9 +27,14 @@ const createDate = (minDate, currentDate) => {
 
 const ensureArray = (value) => Array.isArray(value) ? value : [value];
 
+const prepareErrors = (errors) => {
+  return errors.response.data.split(`\n`);
+};
+
 module.exports = {
   getRandomInt,
   shuffle,
   createDate,
   ensureArray,
+  prepareErrors,
 };

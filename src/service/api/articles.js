@@ -5,6 +5,7 @@ const {HttpCode} = require(`../../constans.js`);
 const articleValidation = require(`../middlewares/article-validation.js`);
 const articleAvailability = require(`../middlewares/article-availability.js`);
 const commentsValidation = require(`../middlewares/comments-validator.js`);
+const routeParamsValidator = require(`../middlewares/route-params-validator.js`);
 
 const setArticlesController = (app, articleService, commentsService) => {
   const articlesRoute = new Router();
@@ -29,7 +30,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(newArticle);
   });
 
-  articlesRoute.get(`/:articleId`, [articleAvailability(articleService)], async (req, res) => {
+  articlesRoute.get(`/:articleId`, [routeParamsValidator, articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
     const needCategoriesCount = req.query.needCategoriesCount;
     const pickedArticle = await articleService.findOne({publicationId: articleId, needCategoriesCount});
@@ -38,7 +39,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(pickedArticle);
   });
 
-  articlesRoute.put(`/:articleId`, [articleAvailability(articleService), articleValidation], async (req, res) => {
+  articlesRoute.put(`/:articleId`, [routeParamsValidator, articleAvailability(articleService), articleValidation], async (req, res) => {
     const articleId = req.params.articleId;
     const pickedArticle = await articleService.update(articleId, req.body);
 
@@ -46,7 +47,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(pickedArticle);
   });
 
-  articlesRoute.delete(`/:articleId`, [articleAvailability(articleService)], async (req, res) => {
+  articlesRoute.delete(`/:articleId`, [routeParamsValidator, articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
     const deletedArticle = await articleService.drop(articleId);
 
@@ -59,7 +60,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(deletedArticle);
   });
 
-  articlesRoute.get(`/:articleId/comments`, [articleAvailability(articleService)], async (req, res) => {
+  articlesRoute.get(`/:articleId/comments`, [routeParamsValidator, articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
     const allComments = await commentsService.findAll(articleId);
 
@@ -67,7 +68,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(allComments);
   });
 
-  articlesRoute.post(`/:articleId/comments`, [articleAvailability(articleService), commentsValidation], async (req, res) => {
+  articlesRoute.post(`/:articleId/comments`, [routeParamsValidator, articleAvailability(articleService), commentsValidation], async (req, res) => {
     const articleId = req.params.articleId;
     const newComment = await commentsService.create(articleId, req.body);
 
@@ -75,7 +76,7 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(newComment);
   });
 
-  articlesRoute.delete(`/:articleId/comments/:commentId`, [articleAvailability(articleService)], async (req, res) => {
+  articlesRoute.delete(`/:articleId/comments/:commentId`, [routeParamsValidator, articleAvailability(articleService)], async (req, res) => {
     const {articleId, commentId} = req.params;
     const existingComment = await commentsService.findOne(commentId, articleId);
 
