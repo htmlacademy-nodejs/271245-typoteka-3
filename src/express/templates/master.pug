@@ -6,9 +6,9 @@ block variables
   - let wrapperClassName = 'wrapper'
 
 body
+  include includes/mixins.pug
   div(class=wrapperClassName)
     block header
     block main
     include includes/footer.pug
   include includes/scripts.pug
-  
