@@ -1,3 +1,9 @@
+mixin insertErrorMessage(messages)
+  if messages
+    .server-error
+      each message of messages
+        .server-error__item= message
+
 mixin pagination(page, totalPages, width, prefix)
     -
       let start = page - width;

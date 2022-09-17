@@ -51,6 +51,7 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
     res.redirect(`/my`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
+    console.log(validationMessages);
     const categories = await api.getCategories();
     res.render(`articles/post`, {categories, validationMessages});
   }
