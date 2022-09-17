@@ -14,6 +14,8 @@ const TEMPLATES_DIR = `templates`;
 const port = 8080;
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));

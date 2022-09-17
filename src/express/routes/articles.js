@@ -51,7 +51,6 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
     res.redirect(`/my`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
-    console.log(validationMessages);
     const categories = await api.getCategories();
     res.render(`articles/post`, {categories, validationMessages});
   }
@@ -60,7 +59,6 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
 articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-  console.log(article);
   res.render(`articles/post-detail`, {article});
 }));
 
@@ -101,6 +99,24 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
     page,
     totalPages,
   });
+}));
+
+articlesRouter.post(`/:articleId/comments`, asyncHandler(async (req, res) => {
+  const {articleId} = req.params;
+  const {message} = req.body;
+
+  const commentData = {
+    text: message
+  };
+
+  try {
+    await api.createComment({articleId, data: commentData});
+    res.redirect(`/articles/${articleId}`);
+  } catch (err) {
+    const validationMessages = prepareErrors(err);
+    const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
+    res.render(`articles/post-detail`, {article, validationMessages});
+  }
 }));
 
 module.exports = articlesRouter;
