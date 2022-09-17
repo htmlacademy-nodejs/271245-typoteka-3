@@ -20,7 +20,7 @@ myRouter.get(`/comments`, asyncHandler(async (_req, res) => {
   res.render(`admin_activity/comments`, {articles});
 }));
 
-myRouter.get(`/categories`, asyncHandler(async (req, res) => {
+myRouter.get(`/categories`, asyncHandler(async (_req, res) => {
   const allCategories = await api.getCategories();
   res.render(`admin_activity/all-categories`, {allCategories});
 }));

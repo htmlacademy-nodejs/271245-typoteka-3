@@ -60,6 +60,7 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
 articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
+  console.log(article);
   res.render(`articles/post-detail`, {article});
 }));
 

@@ -41,6 +41,7 @@ block main
             .post__picture
               img(src=article.picture alt)
           .post__text
+            p #{article.announcement}
             p #{article.mainText}
       .post__wrapper.post__wrapper--comments
         if article.comments.length
