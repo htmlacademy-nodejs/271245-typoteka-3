@@ -52,27 +52,26 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
     const validationMessages = prepareErrors(err);
     const categories = await api.getCategories();
     res.render(`articles/post`, {categories, validationMessages});
-    console.log(validationMessages);
   }
 }));
 
-articlesRouter.get(`/:id`, asyncHandler(async (req, res) => {
-  const {id} = req.params;
-  const article = await api.getArticle({publicationId: id, needCategoriesCount: true});
+articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
+  const {articleId} = req.params;
+  const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
   res.render(`articles/post-detail`, {article});
 }));
 
-articlesRouter.get(`/edit/:id`, asyncHandler(async (req, res) => {
+articlesRouter.get(`/edit/:articleId`, asyncHandler(async (req, res) => {
   try {
-    const {id} = req.params;
-    const article = await api.getArticle({publicationId: id, needCategoriesCount: true});
+    const {articleId} = req.params;
+    const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
     res.render(`articles/post`, {article});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
 }));
 
-articlesRouter.get(`/category/:id`, (_req, res) => {
+articlesRouter.get(`/category/:categoryId`, (_req, res) => {
   res.render(`articles/articles-by-category`);
 });
 
