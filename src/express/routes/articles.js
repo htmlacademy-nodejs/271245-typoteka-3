@@ -12,6 +12,7 @@ const {Router} = require(`express`);
 const articlesRouter = new Router();
 
 const UPLOAD_DIR = `../upload/img/`;
+const PUBLICATIONS_PER_PAGE = 8;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 
 const storage = multer.diskStorage({
@@ -71,8 +72,33 @@ articlesRouter.get(`/edit/:articleId`, asyncHandler(async (req, res) => {
   }
 }));
 
-articlesRouter.get(`/category/:categoryId`, (_req, res) => {
-  res.render(`articles/articles-by-category`);
-});
+articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
+  const {categoryId} = req.params;
+  let {page = 1} = req.query;
+  page = +page;
+
+  const limit = PUBLICATIONS_PER_PAGE;
+  const offset = (page - 1) * PUBLICATIONS_PER_PAGE;
+
+  const [categories, {category, count, articlesByCategory}] = await Promise.all([
+    api.getCategories(true),
+    api.getCategory({categoryId, limit, offset})
+  ]);
+
+  const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
+
+  const publicationsData = {
+    category,
+    currentPublications: articlesByCategory
+  };
+
+  res.render(`articles/articles-by-category`, {
+    categories,
+    count,
+    publicationsData,
+    page,
+    totalPages,
+  });
+}));
 
 module.exports = articlesRouter;

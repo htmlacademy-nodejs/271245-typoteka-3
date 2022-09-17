@@ -15,6 +15,22 @@ const setCategoryController = (app, service) => {
     return res.status(HttpCode.OK)
       .json(categories);
   });
+
+  categoryRoute.get(`/:categoryId`, async (req, res) => {
+    const {categoryId} = req.params;
+    const {limit, offset} = req.query;
+
+    const category = await service.findOne(categoryId);
+
+    const {count, articlesByCategory} = await service.findPage(categoryId, limit, offset);
+
+    res.status(HttpCode.OK)
+      .json({
+        category,
+        count,
+        articlesByCategory
+      });
+  });
 };
 
 module.exports = setCategoryController;

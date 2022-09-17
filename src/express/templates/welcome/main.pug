@@ -28,7 +28,7 @@ block main
       ul.themes
         each category in categories
           li.themes__item
-            a.themes__item-link(href='#') #{category.title}
+            a.themes__item-link(href=`/articles/category/${category.id}`) #{category.title}
               sup #{category.count}
     .main-page__section-flex
       section.main-page__hot.hot

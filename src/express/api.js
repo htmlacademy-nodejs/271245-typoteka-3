@@ -37,6 +37,12 @@ class API {
     });
   }
 
+  async getCategory({categoryId, limit, offset} = {}) {
+    return this._load(`/category/${categoryId}`, {
+      params: {limit, offset}
+    });
+  }
+
   async getCategories(count) {
     return await this._load(`/category`, {
       params: {count}

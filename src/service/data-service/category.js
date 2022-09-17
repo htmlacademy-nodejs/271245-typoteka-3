@@ -5,6 +5,7 @@ const Aliase = require(`../models/aliase.js`);
 
 class CategoryService {
   constructor(sequelize) {
+    this._Publication = sequelize.models.Publication;
     this._Category = sequelize.models.Category;
     this._PublicationCategory = sequelize.models.PublicationCategory;
   }
@@ -28,6 +29,39 @@ class CategoryService {
     } else {
       return this._Category.findAll({raw: true});
     }
+  }
+
+  async findOne(categoryId) {
+    return this._Category.findByPk(categoryId);
+  }
+
+  async findPage(categoryId, limit, offset) {
+    const articlesByCategory = await this._PublicationCategory.findAll({
+      attributes: [`publicationId`],
+      where: {
+        categoryId,
+      },
+      raw: true
+    });
+
+    const publicationsId = articlesByCategory.map((publicationIdItem) => publicationIdItem.publicationId);
+
+    const {count, rows} = await this._Publication.findAndCountAll({
+      limit,
+      offset,
+      include: [
+        Aliase.CATEGORIES,
+      ],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+      where: {
+        id: publicationsId
+      },
+      distinct: true
+    });
+
+    return {count, articlesByCategory: rows};
   }
 }
 
