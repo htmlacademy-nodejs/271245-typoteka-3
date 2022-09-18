@@ -2,7 +2,7 @@
 
 const pino = require(`pino`);
 const pinoPretty = require(`pino-pretty`);
-const {Env} = require(`../../constans.js`);
+const {Env} = require(`../../constants.js`);
 
 const LOG_FILE = `./logs/api.log`;
 const DEFAULT_STDOUT_OUTPUT = 1;

@@ -5,7 +5,7 @@ const path = require(`path`);
 const myRoutes = require(`./routes/my`);
 const articlesRoutes = require(`./routes/articles`);
 const rootRoutes = require(`./routes/root`);
-const {HttpCode} = require(`../constans.js`);
+const {HttpCode} = require(`../constants.js`);
 const {green} = require(`chalk`);
 
 const PUBLIC_DIR = `public`;

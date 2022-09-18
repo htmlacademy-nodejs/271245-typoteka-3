@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 
 const searchRoute = new Router();
 

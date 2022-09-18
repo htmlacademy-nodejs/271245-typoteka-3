@@ -5,7 +5,7 @@ const sequelize = require(`../lib/sequelize.js`);
 const {getLogger} = require(`../lib/logger.js`);
 const {readFile} = require(`fs`).promises;
 const {getRandomInt, shuffle} = require(`../../utils.js`);
-const {ExitCode} = require(`../../constans.js`);
+const {ExitCode} = require(`../../constants.js`);
 const initDatabase = require(`../lib/init-db.js`);
 
 const DEFAULT_COUNT = 1;

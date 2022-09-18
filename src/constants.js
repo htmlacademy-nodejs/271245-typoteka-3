@@ -21,6 +21,13 @@ const HttpCode = {
   BAD_REQUEST: 400,
 };
 
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 const Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`
@@ -35,6 +42,7 @@ module.exports = {
   DEFAULT_PORT,
   ExitCode,
   HttpCode,
+  HttpMethod,
   Env,
   USER_ARGV_INDEX,
   MAX_ID_LENGTH,

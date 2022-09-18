@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 
 const ErrorArticleMessage = {
   TITLE_MIN: `Заголовок содержит меньше 30 символов`,

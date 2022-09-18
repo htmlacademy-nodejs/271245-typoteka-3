@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 
 const schema = Joi.object({
   articleId: Joi.number().integer().min(1),

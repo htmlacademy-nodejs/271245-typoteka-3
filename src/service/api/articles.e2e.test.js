@@ -5,7 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db.js`);
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 const articles = require(`./articles.js`);
 const {ArticlesService, CommentsService} = require(`../data-service`);
 

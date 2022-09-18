@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require(`express`);
-const {DEFAULT_PORT, HttpCode, API_PREFIX} = require(`../../constans.js`);
+const {DEFAULT_PORT, HttpCode, API_PREFIX} = require(`../../constants.js`);
 const routes = require(`../api`);
 const sequelize = require(`../lib/sequelize.js`);
 const {getLogger} = require(`../lib/logger`);

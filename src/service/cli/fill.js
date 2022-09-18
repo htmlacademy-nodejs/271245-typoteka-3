@@ -3,7 +3,7 @@
 const {readFile, writeFile} = require(`fs`).promises;
 const {green, red} = require(`chalk`);
 const {getRandomInt, shuffle} = require(`../../utils.js`);
-const {ExitCode} = require(`../../constans.js`);
+const {ExitCode} = require(`../../constants.js`);
 
 const DEFAULT_COUNT = 1;
 const PUBLICATION_MAX_COUNT = 1000;

@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 
 const ErrorCommentMessage = {
   TEXT: `Комментарий содержит меньше 20 символов`

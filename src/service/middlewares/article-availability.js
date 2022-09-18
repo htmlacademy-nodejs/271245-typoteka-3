@@ -1,6 +1,6 @@
 'use strict';
 
-const {HttpCode} = require(`../../constans.js`);
+const {HttpCode} = require(`../../constants.js`);
 
 const articleAvailability = (service) => {
   return async (req, res, next) => {
