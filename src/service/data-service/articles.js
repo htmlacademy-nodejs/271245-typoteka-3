@@ -77,12 +77,21 @@ class ArticlesService {
   }
 
   async update(publicationId, publicationData) {
-    const [modified] = await this._Publication.update(publicationData, {
+    const affectedRows = await this._Publication.update(publicationData, {
       where: {
         id: publicationId,
       }
     });
-    return Boolean(modified);
+
+    const updatedArticle = await this._Publication.findOne({
+      where: {
+        id: publicationId,
+      }
+    });
+
+    await updatedArticle.setCategories(publicationData.categories);
+
+    return Boolean(affectedRows);
   }
 
   async drop(publicationId) {

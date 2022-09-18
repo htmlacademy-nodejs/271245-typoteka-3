@@ -56,6 +56,13 @@ class API {
     });
   }
 
+  editArticle({articleId, data}) {
+    return this._load(`/articles/${articleId}`, {
+      method: `PUT`,
+      data
+    });
+  }
+
   createComment({articleId, data}) {
     return this._load(`/articles/${articleId}/comments`, {
       method: `POST`,

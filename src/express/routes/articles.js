@@ -56,6 +56,27 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
   }
 }));
 
+articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+  const {title, announcement, category} = req.body;
+  const {articleId} = req.params;
+  const articleData = {
+    picture: req?.file?.filename ?? req.body[`photo`],
+    title,
+    announcement,
+    mainText: req.body[`full-text`],
+    categories: ensureArray(category),
+  };
+
+  try {
+    await api.editArticle({articleId, data: articleData});
+    res.redirect(`/my`);
+  } catch (err) {
+    const validationMessages = prepareErrors(err);
+    const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
+    res.render(`articles/post`, {article, validationMessages});
+  }
+}));
+
 articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
