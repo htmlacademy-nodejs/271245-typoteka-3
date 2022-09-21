@@ -12,6 +12,7 @@ const ErrorArticleMessage = {
   MAIN_TEXT_MIN: `Основной текст содержит меньше 1 символа`,
   MAIN_TEXT_MAX: `Основной текст не может содержать более 1000 символов`,
   PICTURE: `Тип изображения не поддерживается`,
+  USER_ID: `Некорректный идентификатор пользователя`,
 };
 
 const schema = Joi.object({
@@ -35,6 +36,9 @@ const schema = Joi.object({
     'string.min': ErrorArticleMessage.MAIN_TEXT_MIN,
     'string.max': ErrorArticleMessage.MAIN_TEXT_MAX
   }),
+  userId: Joi.number().integer().positive().required().messages({
+    'number.base': ErrorArticleMessage.USER_ID
+  })
 });
 
 const articleValidation = (req, res, next) => {

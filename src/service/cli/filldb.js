@@ -7,6 +7,7 @@ const {readFile} = require(`fs`).promises;
 const {getRandomInt, shuffle} = require(`../../utils.js`);
 const {ExitCode} = require(`../../constants.js`);
 const initDatabase = require(`../lib/init-db.js`);
+const passwordUtils = require(`../lib/password.js`);
 
 const DEFAULT_COUNT = 1;
 const PUBLICATION_MAX_COUNT = 1000;
@@ -16,23 +17,6 @@ const FULL_TEXT_MAX_COUNT = 5;
 const [TITLE_FILE_PATH, CATEGORIES_FILE_PATH, SENTENCES_FILE_PATH, COMMENTS_FILE_PATH] = [`./data/titles.txt`, `./data/categories.txt`, `./data/sentences.txt`, `./data/comments.txt`];
 
 const logger = getLogger({name: `fillDb`});
-
-const userList = [
-  {
-    email: `test1@ya.ru`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
-    firstName: `Test1_fistname`,
-    lastName: `Test1_lastname`,
-    avatar: `test_avatar_1.png`
-  },
-  {
-    email: `test2@google.ru`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
-    firstName: `Test2_fistname`,
-    lastName: `Test2_lastname`,
-    avatar: `test_avatar_2.png`
-  }
-];
 
 const getContentList = async (filePath) => {
   try {
@@ -53,8 +37,9 @@ const getContentMatrix = () => {
   ]);
 };
 
-const createComments = (commentCount, commentList) => {
+const createComments = (commentCount, commentList, users) => {
   return Array(commentCount).fill({}).map(() => ({
+    user: users[getRandomInt(0, users.length - 1)].email,
     text: shuffle(commentList)
       .slice(0, getRandomInt(1, 3))
       .join(` `),
@@ -70,14 +55,14 @@ const setPublicationCount = (cliArg) => {
   return Number.parseInt(count, 10) || DEFAULT_COUNT;
 };
 
-const generatePublication = (count, titles, sentences, comments, categories, userCount) => {
+const generatePublication = (count, titles, sentences, comments, categories, users) => {
   return Array(count).fill({}).map((_) => ({
-    userId: getRandomInt(1, userCount),
+    user: users[getRandomInt(0, users.length - 1)].email,
     title: titles[getRandomInt(0, titles.length - 1)],
     announcement: shuffle(sentences).slice(0, getRandomInt(1, ANNOUNCE_MAX_COUNT)).join(` `),
     mainText: shuffle(sentences).slice(0, getRandomInt(0, FULL_TEXT_MAX_COUNT)).join(` `),
     category: getRandomSubarray(categories),
-    comments: createComments(getRandomInt(1, COMMENTS_MAX_COUNT), comments),
+    comments: createComments(getRandomInt(1, COMMENTS_MAX_COUNT), comments, users),
   }));
 };
 
@@ -99,10 +84,27 @@ module.exports = {
       process.exit(ExitCode.ERROR);
     }
 
+    const userList = [
+      {
+        email: `test1@ya.ru`,
+        passwordHash: await passwordUtils.hash(`igorev`),
+        name: `Egor`,
+        surname: `Igorev`,
+        avatar: `test_avatar_1.png`
+      },
+      {
+        email: `test2@google.ru`,
+        passwordHash: await passwordUtils.hash(`egorov`),
+        name: `Igor`,
+        surname: `Egorov`,
+        avatar: `test_avatar_2.png`
+      }
+    ];
+
     const [titleList, categoryList, sentencesList, commentList] = await getContentMatrix();
 
-    const publications = generatePublication(countPublications, titleList, sentencesList, commentList, categoryList, userList.length);
+    const publications = generatePublication(countPublications, titleList, sentencesList, commentList, categoryList, userList);
 
-    initDatabase(sequelize, {publications, categoryList});
+    initDatabase(sequelize, {publications, categoryList, users: userList});
   },
 };
