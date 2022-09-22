@@ -6,7 +6,6 @@ const Aliase = require(`../models/aliase`);
 module.exports = async (sequelize, {categoryList, publications, users}) => {
   const {Category, Publication, User} = defineAllModel(sequelize);
   await sequelize.sync({force: true});
-
   const categoryDBValues = categoryList.map((item) => ({title: item}));
   const categoryModels = await Category.bulkCreate(categoryDBValues);
 
@@ -16,7 +15,6 @@ module.exports = async (sequelize, {categoryList, publications, users}) => {
   }), {});
 
   const userModels = await User.bulkCreate(users, {include: [Aliase.PUBLICATIONS, Aliase.COMMENTS]});
-  console.log(userModels);
 
   const userIdByEmail = userModels.reduce((acc, next) => ({
     [next.email]: next.id,
