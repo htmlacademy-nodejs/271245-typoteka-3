@@ -1,6 +1,8 @@
 'use strict';
 
 const asyncHandler = require(`express-async-handler`);
+const upload = require(`../middlewares/upload.js`);
+const {prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const rootRouter = new Router();
@@ -32,6 +34,27 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 rootRouter.get(`/register`, (_req, res) => {
   res.render(`join/register`);
 });
+
+rootRouter.post(`/register`, upload.single(`avatar`), asyncHandler(async (req, res) => {
+  const {body, file} = req;
+  const {name, surname, email, password} = req.body;
+  const userData = {
+    name,
+    surname,
+    email,
+    password,
+    passwordRepeated: body[`repeat-password`],
+    avatar: file ? req.file.filename : ``,
+  };
+
+  try {
+    await api.createUser({data: userData});
+    res.redirect(`/login`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    res.render(`join/register`, {validationMessages});
+  }
+}));
 
 rootRouter.get(`/login`, (_req, res) => {
   res.render(`join/login`);

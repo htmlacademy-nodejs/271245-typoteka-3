@@ -2,30 +2,16 @@
 // /articles;
 
 const asyncHandler = require(`express-async-handler`);
-const multer = require(`multer`);
-const path = require(`path`);
-const {nanoid} = require(`nanoid`);
+const upload = require(`../middlewares/upload.js`);
 const {HttpCode} = require(`../../constants.js`);
 const {ensureArray, prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const articlesRouter = new Router();
 
-const UPLOAD_DIR = `../upload/img/`;
 const PUBLICATIONS_PER_PAGE = 8;
-const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
-
-const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
-  filename: (_req, file, cb) => {
-    const uniqueName = nanoid(10);
-    const extension = file.originalname.split(`.`).pop();
-    cb(null, `${uniqueName}.${extension}`);
-  }
-});
 
 const api = getAPI();
-const upload = multer({storage});
 
 articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(async (_req, res) => {
   try {

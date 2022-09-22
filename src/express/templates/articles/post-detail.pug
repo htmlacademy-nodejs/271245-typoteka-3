@@ -59,7 +59,7 @@ block main
                     p.comments__message #{comment.text}
             .comments__footer.comments__footer--user
               +insertErrorMessage(validationMessages)
-              form(action=`/articles/${article.id}/comments` method='POST' enctype="application/x-www-form-urlencoded")
+              form(action=`/articles/${article.id}/comments` method='POST' enctype='application/x-www-form-urlencoded')
                 .comments__avatar.avatar
                   img(src='img/avatar-2.png' alt='аватар пользователя')
                 label
