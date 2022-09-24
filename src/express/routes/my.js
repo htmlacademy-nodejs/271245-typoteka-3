@@ -8,21 +8,27 @@ const myRouter = new Router();
 
 const api = getAPI();
 
-myRouter.get(`/`, asyncHandler(async (_req, res) => {
+myRouter.get(`/`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   const articles = await api.getArticles();
-  res.render(`admin_activity/my`, {articles});
+  res.render(`admin_activity/my`, {articles, user});
 }));
 
-myRouter.get(`/comments`, asyncHandler(async (_req, res) => {
+myRouter.get(`/comments`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   const articles = await api.getArticles({
     comments: true,
   });
-  res.render(`admin_activity/comments`, {articles});
+  res.render(`admin_activity/comments`, {articles, user});
 }));
 
-myRouter.get(`/categories`, asyncHandler(async (_req, res) => {
+myRouter.get(`/categories`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   const allCategories = await api.getCategories();
-  res.render(`admin_activity/all-categories`, {allCategories});
+  res.render(`admin_activity/all-categories`, {allCategories, user});
 }));
 
 module.exports = myRouter;

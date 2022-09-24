@@ -11,6 +11,8 @@ const PUBLICATIONS_PER_PAGE = 8;
 const api = getAPI();
 
 rootRouter.get(`/`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   let {page = 1} = req.query;
   page = +page;
 
@@ -28,11 +30,13 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
 
-  res.render(`welcome/main`, {articles, page, totalPages, categories});
+  res.render(`welcome/main`, {articles, page, totalPages, categories, user});
 }));
 
-rootRouter.get(`/register`, (_req, res) => {
-  res.render(`join/register`);
+rootRouter.get(`/register`, (req, res) => {
+  const {user} = req.session;
+
+  res.render(`join/register`, {user});
 });
 
 rootRouter.post(`/register`, upload.single(`avatar`), asyncHandler(async (req, res) => {
@@ -56,19 +60,47 @@ rootRouter.post(`/register`, upload.single(`avatar`), asyncHandler(async (req, r
   }
 }));
 
-rootRouter.get(`/login`, (_req, res) => {
-  res.render(`join/login`);
+rootRouter.get(`/login`, (req, res) => {
+  const {user} = req.session;
+
+  res.render(`join/login`, {user});
+});
+
+rootRouter.post(`/login`, asyncHandler(async (req, res) => {
+  const {email, password} = req.body;
+
+  try {
+    const user = await api.auth({email, password});
+
+    req.session.user = user;
+    req.session.save(() => {
+      res.redirect(`/`);
+    });
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const {user} = req.session;
+
+    res.render(`join/login`, {user, validationMessages});
+  }
+}));
+
+rootRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  req.session.save(() => {
+    res.redirect(`/`);
+  });
 });
 
 rootRouter.get(`/search`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
   const {query} = req.query;
   const queryExist = typeof query !== `undefined`;
 
   try {
     const results = await api.search(query);
-    res.render(`search/search`, {results, queryExist});
+    res.render(`search/search`, {results, queryExist, user});
   } catch (err) {
-    res.render(`search/search`, {results: [], queryExist});
+    res.render(`search/search`, {results: [], queryExist, user});
   }
 }));
 

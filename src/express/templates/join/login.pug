@@ -1,18 +1,5 @@
 extends ../master.pug
 
-block header
-  header.header
-    a.header__logo.logo(href='#')
-      img.logo__image(src='img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
-      span.logo__name Типотека
-    nav.header__nav
-      ul.header__nav-list
-        li.header__list-item
-          a.header__popup(href='#') Регистрация
-        li.header__list-item
-          a.header__enter(href='#') Вход с паролем
-    a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
-
 block main
   main
     h1.visually-hidden Регистрация пользователя
@@ -21,12 +8,12 @@ block main
         a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
         h2.popup__title Войти
         .popup__form.form.form--log-in
-          form(action='#' method='get')
+          form(action='/login' method='POST')
             .form__field
               label
                 input(type='email' name='email' placeholder='Электронная почта' required='')
             .form__field
               label
                 input(type='password' name='password' placeholder='Пароль' required='')
-            p.form__error-message Некоторая ошибка произошла, беда!
+            +insertErrorMessage(validationMessages)
             button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type='submit') Войти
