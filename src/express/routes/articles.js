@@ -13,10 +13,12 @@ const PUBLICATIONS_PER_PAGE = 8;
 
 const api = getAPI();
 
-articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(async (_req, res) => {
+articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   try {
     const categories = await api.getCategories();
-    res.render(`articles/post`, {categories});
+    res.render(`articles/post`, {categories, user});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
@@ -64,22 +66,28 @@ articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), asy
 }));
 
 articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-  res.render(`articles/post-detail`, {article});
+  res.render(`articles/post-detail`, {article, user});
 }));
 
 articlesRouter.get(`/edit/:articleId`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   try {
     const {articleId} = req.params;
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post`, {article});
+    res.render(`articles/post`, {article, user});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
 }));
 
 articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+
   const {categoryId} = req.params;
   let {page = 1} = req.query;
   page = +page;
@@ -105,6 +113,7 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
     publicationsData,
     page,
     totalPages,
+    user,
   });
 }));
 
