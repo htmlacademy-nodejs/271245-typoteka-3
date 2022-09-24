@@ -25,6 +25,7 @@ articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(asy
 }));
 
 articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+  const {user} = req.session;
   const {title, announcement, category} = req.body;
   const articleData = {
     picture: req?.file?.filename ?? null,
@@ -32,6 +33,7 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
     announcement,
     mainText: req.body[`full-text`],
     categories: ensureArray(category),
+    userId: user.id,
   };
 
   try {
@@ -118,11 +120,13 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
 }));
 
 articlesRouter.post(`/:articleId/comments`, asyncHandler(async (req, res) => {
+  const {user} = req.session;
   const {articleId} = req.params;
   const {message} = req.body;
 
   const commentData = {
-    text: message
+    text: message,
+    userId: user.id,
   };
 
   try {

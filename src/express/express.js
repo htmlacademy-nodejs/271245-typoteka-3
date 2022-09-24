@@ -48,7 +48,10 @@ app.use(`/my`, myRoutes);
 
 app.use(`/articles`, articlesRoutes);
 
-app.use((_req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/404`));
+app.use((req, res) => {
+  const {user} = req.session;
+  res.status(HttpCode.NOT_FOUND).render(`errors/404`, {user});
+});
 
 app.listen(port, () => {
   console.log(green(`Сервер создан, порт: ${port}`));
