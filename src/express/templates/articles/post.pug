@@ -8,6 +8,7 @@ block main
       .popup.popup--new-publication.popup--anti
         .new-publication
           form(action=(articleExists ? `/articles/edit/${article.id}` : `/articles/add`) method='POST' enctype='multipart/form-data')
+            input(type="hidden" name="_csrf" value=csrfToken)
             .new-publication__header
               h1 #{articleExists ? 'Редактировать публикацию' : 'Новая публикация'}
               .new-publication__date-form

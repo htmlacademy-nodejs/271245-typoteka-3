@@ -2,29 +2,32 @@
 // /articles;
 
 const asyncHandler = require(`express-async-handler`);
+const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
+const auth = require(`../middlewares/auth.js`);
 const {HttpCode} = require(`../../constants.js`);
 const {ensureArray, prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const articlesRouter = new Router();
+const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
 
 const api = getAPI();
 
-articlesRouter.get(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+articlesRouter.get(`/add`, auth, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
   try {
     const categories = await api.getCategories();
-    res.render(`articles/post`, {categories, user});
+    res.render(`articles/post`, {categories, user, csrfToken: req.csrfToken()});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
 }));
 
-articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+articlesRouter.post(`/add`, upload.single(`article_img_upload`), csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
   const {title, announcement, category} = req.body;
   const articleData = {
@@ -42,11 +45,11 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), asyncHandler(as
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const categories = await api.getCategories();
-    res.render(`articles/post`, {categories, validationMessages});
+    res.render(`articles/post`, {categories, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
-articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), asyncHandler(async (req, res) => {
+articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), csrfProtection, asyncHandler(async (req, res) => {
   const {title, announcement, category} = req.body;
   const {articleId} = req.params;
   const articleData = {
@@ -63,25 +66,25 @@ articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), asy
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post`, {article, validationMessages});
+    res.render(`articles/post`, {article, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
-articlesRouter.get(`/:articleId`, asyncHandler(async (req, res) => {
+articlesRouter.get(`/:articleId`, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-  res.render(`articles/post-detail`, {article, user});
+  res.render(`articles/post-detail`, {article, user, csrfToken: req.csrfToken()});
 }));
 
-articlesRouter.get(`/edit/:articleId`, asyncHandler(async (req, res) => {
+articlesRouter.get(`/edit/:articleId`, auth, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
   try {
     const {articleId} = req.params;
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post`, {article, user});
+    res.render(`articles/post`, {article, user, csrfToken: req.csrfToken()});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }
@@ -119,7 +122,7 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
   });
 }));
 
-articlesRouter.post(`/:articleId/comments`, asyncHandler(async (req, res) => {
+articlesRouter.post(`/:articleId/comments`, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
   const {articleId} = req.params;
   const {message} = req.body;
@@ -135,7 +138,7 @@ articlesRouter.post(`/:articleId/comments`, asyncHandler(async (req, res) => {
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post-detail`, {article, validationMessages});
+    res.render(`articles/post-detail`, {article, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
