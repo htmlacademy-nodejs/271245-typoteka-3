@@ -1,11 +1,13 @@
 'use strict';
 
 const asyncHandler = require(`express-async-handler`);
+const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
 const {prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
 const rootRouter = new Router();
+const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
 const api = getAPI();
@@ -33,13 +35,13 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
   res.render(`welcome/main`, {articles, page, totalPages, categories, user});
 }));
 
-rootRouter.get(`/register`, (req, res) => {
+rootRouter.get(`/register`, csrfProtection, (req, res) => {
   const {user} = req.session;
 
-  res.render(`join/register`, {user});
+  res.render(`join/register`, {user, csrfToken: req.csrfToken()});
 });
 
-rootRouter.post(`/register`, upload.single(`avatar`), asyncHandler(async (req, res) => {
+rootRouter.post(`/register`, upload.single(`avatar`), csrfProtection, asyncHandler(async (req, res) => {
   const {body, file} = req;
   const {name, surname, email, password} = req.body;
   const userData = {
@@ -56,17 +58,17 @@ rootRouter.post(`/register`, upload.single(`avatar`), asyncHandler(async (req, r
     res.redirect(`/login`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
-    res.render(`join/register`, {validationMessages});
+    res.render(`join/register`, {validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
-rootRouter.get(`/login`, (req, res) => {
+rootRouter.get(`/login`, csrfProtection, (req, res) => {
   const {user} = req.session;
 
-  res.render(`join/login`, {user});
+  res.render(`join/login`, {user, csrfToken: req.csrfToken()});
 });
 
-rootRouter.post(`/login`, asyncHandler(async (req, res) => {
+rootRouter.post(`/login`, csrfProtection, asyncHandler(async (req, res) => {
   const {email, password} = req.body;
 
   try {
@@ -80,15 +82,16 @@ rootRouter.post(`/login`, asyncHandler(async (req, res) => {
     const validationMessages = prepareErrors(errors);
     const {user} = req.session;
 
-    res.render(`join/login`, {user, validationMessages});
+    res.render(`join/login`, {user, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
 rootRouter.get(`/logout`, (req, res) => {
-  delete req.session.user;
-  req.session.save(() => {
-    res.redirect(`/`);
-  });
+  if (req.session) {
+    req.session.destroy(() => {
+      res.redirect(`/`);
+    });
+  }
 });
 
 rootRouter.get(`/search`, asyncHandler(async (req, res) => {
