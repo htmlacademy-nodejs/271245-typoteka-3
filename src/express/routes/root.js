@@ -32,6 +32,8 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
 
+  console.log(user);
+
   res.render(`welcome/welcome`, {articles, page, totalPages, categories, user});
 }));
 
