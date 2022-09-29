@@ -9,7 +9,7 @@ const myRoutes = require(`./routes/my`);
 const articlesRoutes = require(`./routes/articles`);
 const rootRoutes = require(`./routes/root`);
 const {HttpCode} = require(`../constants.js`);
-const {green} = require(`chalk`);
+const {blue} = require(`chalk`);
 
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
@@ -53,8 +53,13 @@ app.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).render(`errors/404`, {user});
 });
 
+app.use((_err, req, res, _next) => {
+  const {user} = req.session;
+  res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`, {user});
+});
+
 app.listen(port, () => {
-  console.log(green(`Сервер создан, порт: ${port}`));
+  console.log(blue(`ФРОНТ-Сервер создан, порт: ${port}`));
 });
 
 app.set(`views`, path.resolve(__dirname, TEMPLATES_DIR));

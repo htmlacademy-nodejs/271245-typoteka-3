@@ -5,6 +5,7 @@ const {DEFAULT_PORT, HttpCode, API_PREFIX} = require(`../../constants.js`);
 const routes = require(`../api`);
 const sequelize = require(`../lib/sequelize.js`);
 const {getLogger} = require(`../lib/logger`);
+const {green} = require(`chalk`);
 
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
@@ -54,7 +55,9 @@ module.exports = {
       logger.error(`An error occurred on processing request: ${err.message}`);
     });
 
-    app.listen(port)
+    app.listen(port, () => {
+      console.log(green(`БЭК-Сервер создан, порт: ${port}`));
+    })
       .on(`listening`, () => {
         logger.info(`Listening to connections on ${port}`);
       })

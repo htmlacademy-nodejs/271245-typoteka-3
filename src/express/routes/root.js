@@ -32,7 +32,7 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
 
-  res.render(`welcome/main`, {articles, page, totalPages, categories, user});
+  res.render(`welcome/welcome`, {articles, page, totalPages, categories, user});
 }));
 
 rootRouter.get(`/register`, csrfProtection, (req, res) => {
