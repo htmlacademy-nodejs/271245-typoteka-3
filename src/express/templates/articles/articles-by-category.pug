@@ -23,12 +23,12 @@ block main
             ul.preview__breadcrumbs
               each category of article.categories
                 li.preview__breadcrumbs-item
-                  a.preview__breadcrumbs-link(href='#') #{category.title}
+                  a.preview__breadcrumbs-link(href=`/articles/category/${category.id}`) #{category.title}
             .preview__background
               img.preview__background-image(src='img/skyscraper@1x.jpg' width='460' height='240' srcset='img/skyscraper@1x.jpg 1x, img/skyscraper@2x.jpg 2x' alt='Фотография небоскреба')
             time.preview__time(datetime='2019-03-21T20:33') #{formatDate(article.createdAt)}
             h3.preview__name
-              a.preview__name-link(href='#') #{article.title}
+              a.preview__name-link(href=`/articles/${article.id}`) #{article.title}
             p.preview__text #{article.announcement}
             a.preview__comment(href='#')
               | Комментарии 
