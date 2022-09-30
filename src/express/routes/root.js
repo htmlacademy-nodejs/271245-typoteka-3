@@ -10,6 +10,7 @@ const rootRouter = new Router();
 const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
+const MOST_DISCUSSED_ARTICLES_QUANTITY = 4;
 const api = getAPI();
 
 rootRouter.get(`/`, asyncHandler(async (req, res) => {
@@ -32,9 +33,12 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
 
-  console.log(user);
+  const articlesWithComments = await api.getArticles({
+    comments: true,
+  });
+  let mostDiscussedArticles = articlesWithComments.sort((a, b) => b.comments.length - a.comments.length).splice(0, MOST_DISCUSSED_ARTICLES_QUANTITY);
 
-  res.render(`welcome/welcome`, {articles, page, totalPages, categories, user});
+  res.render(`welcome/welcome`, {articles, page, totalPages, categories, user, mostDiscussedArticles});
 }));
 
 rootRouter.get(`/register`, csrfProtection, (req, res) => {
