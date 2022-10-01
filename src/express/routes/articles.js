@@ -5,6 +5,7 @@ const asyncHandler = require(`express-async-handler`);
 const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
 const auth = require(`../middlewares/auth.js`);
+const admin = require(`../middlewares/admin.js`);
 const {HttpCode} = require(`../../constants.js`);
 const {ensureArray, prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
@@ -16,7 +17,7 @@ const PUBLICATIONS_PER_PAGE = 8;
 
 const api = getAPI();
 
-articlesRouter.get(`/add`, auth, csrfProtection, asyncHandler(async (req, res) => {
+articlesRouter.get(`/add`, auth, admin, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
   try {
@@ -78,7 +79,7 @@ articlesRouter.get(`/:articleId`, csrfProtection, asyncHandler(async (req, res) 
   res.render(`articles/post-detail`, {article, user, csrfToken: req.csrfToken()});
 }));
 
-articlesRouter.get(`/edit/:articleId`, auth, csrfProtection, asyncHandler(async (req, res) => {
+articlesRouter.get(`/edit/:articleId`, auth, admin, csrfProtection, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
   try {

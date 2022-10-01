@@ -11,6 +11,7 @@ const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
 const MOST_DISCUSSED_ARTICLES_QUANTITY = 4;
+const ADMIN_ID = 1;
 const api = getAPI();
 
 rootRouter.get(`/`, asyncHandler(async (req, res) => {
@@ -80,7 +81,10 @@ rootRouter.post(`/login`, csrfProtection, asyncHandler(async (req, res) => {
   try {
     const user = await api.auth({email, password});
 
-    req.session.user = user;
+    req.session.user = {
+      ...user,
+      admin: user.id === ADMIN_ID,
+    };
     req.session.save(() => {
       res.redirect(`/`);
     });
