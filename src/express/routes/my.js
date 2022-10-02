@@ -46,7 +46,6 @@ myRouter.post(`/add/category`, csrfProtection, asyncHandler(async (req, res) => 
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const allCategories = await api.getCategories();
-    console.log(validationMessages);
     res.render(`admin_activity/all-categories`, {allCategories, validationMessages, user, csrfToken: req.csrfToken()});
   }
 }));

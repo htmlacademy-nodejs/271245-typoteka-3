@@ -70,6 +70,11 @@ class CategoryService {
     });
     return category && category.get();
   }
+
+  async create(newCategory) {
+    const category = await this._Category.create(newCategory);
+    return category.get();
+  }
 }
 
 module.exports = CategoryService;

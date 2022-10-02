@@ -19,11 +19,15 @@ const setCategoryController = (app, categoryService) => {
 
   categoryRoute.post(`/`, commentsValidation(categoryService), async (req, res) => {
     const {newCategory} = req.body;
+    const createdCategory = await categoryService.create({title: newCategory});
 
-    const categories = await categoryService.findAll();
+    if (!createdCategory) {
+      return res.status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
 
     return res.status(HttpCode.OK)
-      .json(categories);
+      .json(createdCategory);
   });
 
   categoryRoute.get(`/:categoryId`, async (req, res) => {
