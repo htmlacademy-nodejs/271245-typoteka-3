@@ -67,7 +67,7 @@ class ArticlesService {
     const {count, rows} = await this._Publication.findAndCountAll({
       limit,
       offset,
-      include: [Aliase.CATEGORIES],
+      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
       order: [
         [`createdAt`, `DESC`]
       ],

@@ -30,6 +30,14 @@ const setArticlesController = (app, articleService, commentsService) => {
       .json(newArticle);
   });
 
+  articlesRoute.get(`/comments`, async (req, res) => {
+    const {count} = req.query;
+    let lastComments = await commentsService.findLast(count);
+
+    return res.status(HttpCode.OK)
+      .json(lastComments);
+  });
+
   articlesRoute.get(`/:articleId`, [routeParamsValidator, articleAvailability(articleService)], async (req, res) => {
     const articleId = req.params.articleId;
     const needCategoriesCount = req.query.needCategoriesCount;

@@ -1,9 +1,12 @@
 'use strict';
 
+const Aliase = require(`../models/aliase.js`);
+
 class CommentsService {
   constructor(sequelize) {
     this._Publication = sequelize.models.Publication;
     this._Comment = sequelize.models.Comment;
+    this._User = sequelize.models.User;
   }
 
   findAll(publicationId) {
@@ -13,6 +16,21 @@ class CommentsService {
       },
       raw: true,
     });
+  }
+
+  async findLast(count) {
+    let lastComments = await this._Comment.findAll({
+      include: [{
+        model: this._User,
+        as: Aliase.USERS,
+        attributes: [`name`, `surname`, `avatar`]
+      }],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+      raw: true,
+    });
+    return count ? lastComments.splice(0, count) : lastComments;
   }
 
   async findOne(commentId, publicationId) {

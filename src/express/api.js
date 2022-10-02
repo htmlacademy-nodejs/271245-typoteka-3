@@ -77,6 +77,12 @@ class API {
     });
   }
 
+  getLastComments({count} = {}) {
+    return this._load(`/articles/comments`, {
+      params: {count}
+    });
+  }
+
   createUser({data}) {
     return this._load(`/user`, {
       method: HttpMethod.POST,
