@@ -114,6 +114,8 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
     currentPublications: articlesByCategory
   };
 
+  console.log(publicationsData);
+
   res.render(`articles/articles-by-category`, {
     categories,
     count,

@@ -9,6 +9,7 @@ class ArticlesService {
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
     this._PublicationCategory = sequelize.models.PublicationCategory;
+    this._User = sequelize.models.User;
   }
 
   async create(publicationData) {
@@ -33,7 +34,22 @@ class ArticlesService {
   async findOne({publicationId, needCategoriesCount}) {
     let categories;
     let data = await this._Publication.findByPk(publicationId, {
-      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+      include: [Aliase.CATEGORIES, {
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USERS,
+            attributes: {
+              exclude: [`passwordHash`]
+            }
+          }
+        ],
+        order: [
+          [`createdAt`, `DESC`]
+        ],
+      }],
     });
     data = data ? data.toJSON() : data;
 

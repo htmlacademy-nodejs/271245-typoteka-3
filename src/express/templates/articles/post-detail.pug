@@ -13,13 +13,13 @@ block main
         h2.visually-hidden Основное содержание
         .post__wrapper
           .post__head
-            a.post__backwards.button.button--backwards(href='#') Назад
+            a.post__backwards.button.button--backwards(onclick='javascript:history.back(); return false;') Назад
             time.post__date(datetime=article.createdAt) #{formatDate(article.createdAt)}
             h2.post__title.title.title--main #{article.title}
             ul.post__themes.themes
               each category in article.categories
                 li.themes__item
-                  a.themes__item-link(href='#') #{category.title}
+                  a.themes__item-link(href=`/articles/category/${category.id}`) #{category.title}
                     sup #{category.count}
                   button.themes__remove-btn(type='button') Удалить категорию
           if article.picture
@@ -36,10 +36,10 @@ block main
               each comment in article.comments
                 li.comments__comment
                   .comments__avatar.avatar
-                    img(src='img/avatar-1.png' alt='аватар пользователя')
+                    img(src=(comment.users.avatar ? `img/${comment.users.avatar}` : 'img/default-avatar.png') alt='аватар пользователя') 
                   .comments__text
                     .comments__head
-                      p Евгений Петров •
+                      p #{comment.users.name} #{comment.users.surname}
                       time.comments__date(datetime=comment.createdAt) #{comment.createdAt}
                     p.comments__message #{comment.text}
           else 
@@ -50,12 +50,12 @@ block main
               form(action=`/articles/${article.id}/comments` method='POST' enctype='application/x-www-form-urlencoded')
                 input(type="hidden" name="_csrf" value=csrfToken)
                 .comments__avatar.avatar
-                  img(src='img/avatar-2.png' alt='аватар пользователя')
+                  img(src=(user.avatar ? `img/${user.avatar}` : 'img/default-avatar.png') alt='аватар пользователя')
                 label
                   textarea(rows='1' name='message' placeholder='Присоединиться к обсуждению')
                 button.comments__button.button.button--colored(type='submit') Опубликовать
           else
             .comments__footer.comments__footer--visitor
-              button.comments__button.button.button--colored(type='submit') Войти
+              a.comments__button.button.button--colored(href='/login') Войти
               .comments__registration
                 p.text.text--signature <b class="title title--small">Регистрация</b> Чтобы присоединиться к переписке нужно зарегистрироваться

@@ -13,8 +13,12 @@ block main
       ul.themes
         each category in categories
           li.themes__item
-            a.themes__item-link(href=`/articles/category/${category.id}` class=(category.id === publicationsData.category.id ? `themes__item-link--active` : ``)) #{category.title}
-              sup #{category.count}
+            if category.id !== publicationsData.category.id
+              a.themes__item-link(href=`/articles/category/${category.id}`) #{category.title}
+                sup #{category.count}
+            else
+              span.themes__item-link.themes__item-link--active #{category.title}
+                sup #{category.count}
     section.articles-category__list.preview
       h2.visually-hidden Список превью статей
       ul.preview__list
@@ -30,8 +34,7 @@ block main
             h3.preview__name
               a.preview__name-link(href=`/articles/${article.id}`) #{article.title}
             p.preview__text #{article.announcement}
-            a.preview__comment(href='#')
-              | Комментарии 
+            a.preview__comment(href=`/articles/${article.id}`) Комментарии
               span.preview__cloud
-              b.preview__comment-count #{article.categories.length}
+              b.preview__comment-count 12
     +pagination(page, totalPages, 2, `?`)
