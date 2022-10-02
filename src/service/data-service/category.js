@@ -63,6 +63,13 @@ class CategoryService {
 
     return {count, articlesByCategory: rows};
   }
+
+  async findByCategoryName(categoryName) {
+    const category = await this._Category.findOne({
+      where: {title: categoryName}
+    });
+    return category && category.get();
+  }
 }
 
 module.exports = CategoryService;

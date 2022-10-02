@@ -43,6 +43,13 @@ class API {
     });
   }
 
+  async createCategory(data) {
+    return await this._load(`/category`, {
+      method: HttpMethod.POST,
+      data
+    });
+  }
+
   async getCategories(count) {
     return await this._load(`/category`, {
       params: {count}
