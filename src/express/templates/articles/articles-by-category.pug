@@ -36,5 +36,5 @@ block main
             p.preview__text #{article.announcement}
             a.preview__comment(href=`/articles/${article.id}`) Комментарии
               span.preview__cloud
-              b.preview__comment-count 12
+              b.preview__comment-count #{article.comments.length}
     +pagination(page, totalPages, 2, `?`)

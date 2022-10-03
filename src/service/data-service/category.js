@@ -51,6 +51,7 @@ class CategoryService {
       offset,
       include: [
         Aliase.CATEGORIES,
+        Aliase.COMMENTS,
       ],
       order: [
         [`createdAt`, `DESC`]
