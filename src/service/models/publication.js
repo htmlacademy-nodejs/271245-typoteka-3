@@ -27,14 +27,6 @@ const defineModel = (sequelize) => {
     },
     picture: {
       type: DataTypes.STRING,
-      validate: {
-        checkPictureFormat(imgUrl) {
-          const isCorrectType = (imgUrl.length >= 1) && (IMG_TYPE.some((imgType) => imgUrl.endsWith(imgType)));
-          if (!isCorrectType) {
-            throw new Error(`Wrong img format!`);
-          }
-        }
-      },
     },
     announcement: {
       // eslint-disable-next-line new-cap

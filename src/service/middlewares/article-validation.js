@@ -29,7 +29,7 @@ const schema = Joi.object({
     'string.min': ErrorArticleMessage.ANNOUNCEMENT_MIN,
     'string.max': ErrorArticleMessage.ANNOUNCEMENT_MAX
   }),
-  picture: Joi.string().allow(null).messages({
+  picture: Joi.string().allow(null).allow(``).messages({
     'string.empty': ErrorArticleMessage.PICTURE
   }),
   mainText: Joi.string().allow(``).min(1).max(1000).messages({

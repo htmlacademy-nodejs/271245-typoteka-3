@@ -44,6 +44,8 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
     count: LAST_COMMENTS_QUANTITY,
   });
 
+  console.log(articles[0]);
+
   res.render(`welcome/welcome`, {articles, page, totalPages, categories, user, mostDiscussedArticles, lastComments});
 }));
 

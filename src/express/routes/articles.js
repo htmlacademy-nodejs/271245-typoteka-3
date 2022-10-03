@@ -51,6 +51,7 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), csrfProtection,
 }));
 
 articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), csrfProtection, asyncHandler(async (req, res) => {
+  const {user} = req.session;
   const {title, announcement, category} = req.body;
   const {articleId} = req.params;
   const articleData = {
@@ -59,6 +60,7 @@ articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), csr
     announcement,
     mainText: req.body[`full-text`],
     categories: ensureArray(category),
+    userId: user.id,
   };
 
   try {
@@ -67,7 +69,7 @@ articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), csr
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post`, {article, validationMessages, csrfToken: req.csrfToken()});
+    res.render(`articles/post`, {article, user, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
