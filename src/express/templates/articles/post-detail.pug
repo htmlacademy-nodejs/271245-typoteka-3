@@ -24,7 +24,7 @@ block main
                   button.themes__remove-btn(type='button') Удалить категорию
           if article.picture
             .post__picture
-              img(src=article.picture alt)
+              img(src=`img/${article.picture}` alt)
           .post__text
             p #{article.announcement}
             p #{article.mainText}
