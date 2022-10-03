@@ -22,6 +22,8 @@ block main
                   a.themes__item-link(href=`/articles/category/${category.id}`) #{category.title}
                     sup #{category.count}
                   button.themes__remove-btn(type='button') Удалить категорию
+            if user && user.admin
+              a.themes__item-link.themes__item-link--edit(href=`/articles/edit/${article.id}`) Редактировать публикацию
           if article.picture
             .post__picture
               img(src=`img/${article.picture}` alt)
