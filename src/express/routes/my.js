@@ -26,7 +26,7 @@ myRouter.get(`/comments`, auth, admin, asyncHandler(async (req, res) => {
   const articles = await api.getArticles({
     comments: true,
   });
-  console.log(articles);
+
   res.render(`admin_activity/comments`, {articles, user});
 }));
 

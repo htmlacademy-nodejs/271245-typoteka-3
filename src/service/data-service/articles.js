@@ -19,7 +19,22 @@ class ArticlesService {
   }
 
   async findAll(needCommentsFlag) {
-    const include = needCommentsFlag ? [Aliase.CATEGORIES, Aliase.COMMENTS] : [Aliase.CATEGORIES];
+    const include = needCommentsFlag ? [Aliase.CATEGORIES, {
+      model: this._Comment,
+      as: Aliase.COMMENTS,
+      include: [
+        {
+          model: this._User,
+          as: Aliase.USERS,
+          attributes: {
+            exclude: [`passwordHash`]
+          }
+        }
+      ],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+    }] : [Aliase.CATEGORIES];
 
     const publications = await this._Publication.findAll({
       include,

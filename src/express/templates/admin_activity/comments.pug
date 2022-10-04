@@ -18,10 +18,10 @@ block main
             each comment, commentIndex in article.comments
               li(class='publication__list-item' class=((articleIndex === articles.length - 1 && commentIndex === article.comments.length - 1) ? "publication__list-item--last" : ''))
                 .publication__header
-                  img.publication__list-image(src='img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-                  b.publication__list-name Александр Петров
-                  time.publication__item-time(datetime='2019-03-21T20:33') #{formatDate(article.createdAt)}
-                a.publication__item-text(href='#') #{comment.text}
+                  img.publication__list-image(src=(comment.users.avatar ? `img/${comment.users.avatar}` : 'img/default-avatar.png') width='20' height='20' alt='Аватар пользователя')
+                  b.publication__list-name #{comment.users.name} #{comment.users.surname}
+                  time.publication__item-time(datetime='2019-03-21T20:33') #{formatDate(comment.createdAt)}
+                a.publication__item-text(href=`/articles/${article.id}`) #{comment.text}
                 p.publication__text-strong #{article.title}
                 button.publication__button.button.button--close-item(type='button')
                   span.visually-hidden Закрыть строку списка
