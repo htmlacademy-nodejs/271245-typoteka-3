@@ -30,6 +30,6 @@ block main
                 each result in results
                   .search__result
                     time.search__date(datetime=result.createdAt) #{formatDate(result.createdAt)}
-                    a.search__link(href='#') #{result.title}
+                    a.search__link(href=`/articles/${result.id}`) #{result.title}
                 else
                   p.search-page__empty Ничего не нашлось
