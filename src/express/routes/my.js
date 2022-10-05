@@ -23,11 +23,9 @@ myRouter.get(`/`, auth, admin, asyncHandler(async (req, res) => {
 myRouter.get(`/comments`, auth, admin, asyncHandler(async (req, res) => {
   const {user} = req.session;
 
-  const articles = await api.getArticles({
-    comments: true,
-  });
+  const lastComments = await api.getLastComments();
 
-  res.render(`admin_activity/comments`, {articles, user});
+  res.render(`admin_activity/comments`, {lastComments, user});
 }));
 
 myRouter.get(`/categories`, auth, admin, csrfProtection, asyncHandler(async (req, res) => {

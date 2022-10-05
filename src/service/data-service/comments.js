@@ -24,6 +24,9 @@ class CommentsService {
         model: this._User,
         as: Aliase.USERS,
         attributes: [`name`, `surname`, `avatar`]
+      }, {
+        model: this._Publication,
+        attributes: [`title`]
       }],
       order: [
         [`createdAt`, `DESC`]
