@@ -32,7 +32,13 @@ class CategoryService {
   }
 
   async findOne(categoryId) {
-    return this._Category.findByPk(categoryId);
+    return this._Category.findByPk(categoryId, {
+      include: [{
+        model: this._PublicationCategory,
+        as: Aliase.PUBLICATION_CATEGORIES,
+        attributes: [`publicationId`]
+      }]
+    });
   }
 
   async findPage(categoryId, limit, offset) {
@@ -75,6 +81,15 @@ class CategoryService {
   async create(newCategory) {
     const category = await this._Category.create(newCategory);
     return category.get();
+  }
+
+  drop(categoryId) {
+    const deletedRow = this._Category.destroy({
+      where: {
+        id: categoryId,
+      }
+    });
+    return Boolean(deletedRow);
   }
 }
 

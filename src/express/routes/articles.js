@@ -78,7 +78,6 @@ articlesRouter.get(`/:articleId`, csrfProtection, asyncHandler(async (req, res) 
 
   const {articleId} = req.params;
   const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-  console.log(article);
   res.render(`articles/post-detail`, {article, user, csrfToken: req.csrfToken()});
 }));
 

@@ -56,6 +56,13 @@ class API {
     });
   }
 
+  removeCategory({categoryId, userId}) {
+    return this._load(`/category/${categoryId}`, {
+      method: HttpMethod.DELETE,
+      data: {userId, categoryId}
+    });
+  }
+
   async createArticle(data) {
     return await this._load(`/articles`, {
       method: HttpMethod.POST,

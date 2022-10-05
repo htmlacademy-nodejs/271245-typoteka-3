@@ -18,10 +18,10 @@ block main
       ul.category__list
         each category in allCategories
           if category
-            li.category__list-item
+            li.category__list-item.js-card
               form(action='#' method='POST')
                 input(id=`modify-form-category-${category.id}` type='text' name=`category` value=category.title)
                 label(for=`modify-form-category-${category.id}`)
                   span.visually-hidden Редактировать категорию
                 button.category__button.button.button--category(type='submit') Сохранить
-                button.category__button.button.button--category(type='button') Удалить
+                button.category__button.button.button--category.js-delete-category(type='button' data-delete=`/my/${category.id}`) Удалить

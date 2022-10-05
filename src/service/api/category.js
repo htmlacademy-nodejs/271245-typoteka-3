@@ -45,6 +45,27 @@ const setCategoryController = (app, categoryService) => {
         articlesByCategory
       });
   });
+
+  categoryRoute.delete(`/:categoryId`, async (req, res) => {
+    const {categoryId} = req.params;
+    let category = await categoryService.findOne(categoryId);
+    category = category.toJSON();
+
+    if (!category) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`Not found`);
+    }
+
+    if (category.publicationCategories.length) {
+      return res.status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
+
+    const deletedCategory = await categoryService.drop(categoryId);
+
+    return res.status(HttpCode.OK)
+      .json(deletedCategory);
+  });
 };
 
 module.exports = setCategoryController;

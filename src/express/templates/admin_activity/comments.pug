@@ -14,7 +14,7 @@ block main
       h1.publication__title Комментарии
       ul.publication__list
         each comment, lastCommentIndex in lastComments
-          li(class='publication__list-item js-card' class=((lastCommentIndex === lastComments.length - 1) ? `publication__list-item--last` : ``))
+          li.publication__list-item.js-card(class=((lastCommentIndex === lastComments.length - 1) ? `publication__list-item--last` : ``))
             .publication__header
               img.publication__list-image(src=(comment[`users.avatar`] ? `img/${comment[`users.avatar`]}` : 'img/default-avatar.png') width='20' height='20' alt='Аватар пользователя')
               b.publication__list-name #{comment[`users.name`]} #{comment[`users.surname`]}

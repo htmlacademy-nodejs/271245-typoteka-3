@@ -61,9 +61,10 @@
     });
   };
 
-  const removeElements = document.querySelectorAll(`.js-delete-comments`);
+  const removeCommentsElements = document.querySelectorAll(`.js-delete-comments`);
+  const removeCategoryElements = document.querySelectorAll(`.js-delete-category`);
 
-  const removeObjectElements = [...removeElements];
+  const removeObjectElements = [...removeCommentsElements, ...removeCategoryElements];
 
   if (removeObjectElements.length > 0) {
     Array.from(removeObjectElements).forEach((element) => {
