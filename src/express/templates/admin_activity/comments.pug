@@ -16,12 +16,12 @@ block main
         each article, articleIndex in articles
           if article.comments.length
             each comment, commentIndex in article.comments
-              li(class='publication__list-item' class=((articleIndex === articles.length - 1 && commentIndex === article.comments.length - 1) ? "publication__list-item--last" : ''))
+              li(class='publication__list-item js-card' class=((articleIndex === articles.length - 1 && commentIndex === article.comments.length - 1) ? "publication__list-item--last" : ''))
                 .publication__header
                   img.publication__list-image(src=(comment.users.avatar ? `img/${comment.users.avatar}` : 'img/default-avatar.png') width='20' height='20' alt='Аватар пользователя')
                   b.publication__list-name #{comment.users.name} #{comment.users.surname}
                   time.publication__item-time(datetime='2019-03-21T20:33') #{formatDate(comment.createdAt)}
                 a.publication__item-text(href=`/articles/${article.id}`) #{comment.text}
                 p.publication__text-strong #{article.title}
-                button.publication__button.button.button--close-item(type='button')
+                button.publication__button.button.button--close-item.js-delete-comments(type='button' data-delete=`/articles/${article.id}/comments/${comment.id}`)
                   span.visually-hidden Закрыть строку списка

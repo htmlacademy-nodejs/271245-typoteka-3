@@ -83,6 +83,15 @@ class API {
     });
   }
 
+  removeComment({articleId, userId, commentId}) {
+    return this._load(`/articles/${articleId}/comments/${commentId}`, {
+      method: HttpMethod.DELETE,
+      data: {
+        userId
+      }
+    });
+  }
+
   createUser({data}) {
     return this._load(`/user`, {
       method: HttpMethod.POST,

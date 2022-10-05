@@ -146,4 +146,17 @@ articlesRouter.post(`/:articleId/comments`, csrfProtection, asyncHandler(async (
   }
 }));
 
+articlesRouter.delete(`/:articleId/comments/:commentId`, auth, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+  const {articleId, commentId} = req.params;
+
+  try {
+    const comment = await api.removeComment({articleId, userId: user.id, commentId});
+
+    res.status(HttpCode.OK).send(comment);
+  } catch (errors) {
+    res.status(errors.response.status).send(errors.response.statusText);
+  }
+}));
+
 module.exports = articlesRouter;
