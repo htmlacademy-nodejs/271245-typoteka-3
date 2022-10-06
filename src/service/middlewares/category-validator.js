@@ -5,11 +5,12 @@ const {HttpCode} = require(`../../constants`);
 
 const ErrorCategoryMessage = {
   CATEGORY_EXIST: `Такая категория уже существует`,
+  CATEGORY_EXIST_EDIT: `Используйте новое название для категории`,
   CATEGORY_MIN: `Категория содержит меньше 5-ти символов`,
   CATEGORY_MAX: `Категория содержит более 30-ти символов`,
   CATEGORY_EMPTY: `Поле не может быть пустым`,
   PATTERN: `Использованны недопустимые символы`,
-  CATEGORY_ID: `Использованны недопустимые символы!!!!!!`,
+  CATEGORY_ID: `Использованны недопустимые символы`,
 };
 
 const newCategorySchema = Joi.object({
@@ -53,7 +54,8 @@ const categoryValidation = (service, editCategory = false) => {
     }
 
     if (categoryByName && editCategory) {
-      return next();
+      return res.status(HttpCode.BAD_REQUEST)
+        .send(ErrorCategoryMessage.CATEGORY_EXIST_EDIT);
     }
 
     return next();

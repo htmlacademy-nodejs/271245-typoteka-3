@@ -34,13 +34,13 @@ const setCategoryController = (app, categoryService) => {
     const categoryId = req.params.categoryId;
     const updatedCategory = await categoryService.update(categoryId, {title: req.body.newCategory});
 
-    // if (!createdCategory) {
-    //   return res.status(HttpCode.FORBIDDEN)
-    //     .send(`Forbidden`);
-    // }
+    if (!updatedCategory) {
+      return res.status(HttpCode.FORBIDDEN)
+        .send(`Forbidden`);
+    }
 
-    // return res.status(HttpCode.OK)
-    //   .json(createdCategory);
+    return res.status(HttpCode.OK)
+      .json(updatedCategory);
   });
 
   categoryRoute.get(`/:categoryId`, async (req, res) => {
