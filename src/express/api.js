@@ -50,6 +50,13 @@ class API {
     });
   }
 
+  editCategory({categoryId, newCategory}) {
+    return this._load(`/category/${categoryId}`, {
+      method: HttpMethod.PUT,
+      data: {categoryId, newCategory}
+    });
+  }
+
   async getCategories(count) {
     return await this._load(`/category`, {
       params: {count}

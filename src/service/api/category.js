@@ -2,7 +2,7 @@
 
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants.js`);
-const commentsValidation = require(`../middlewares/category-validator.js`);
+const categoryValidation = require(`../middlewares/category-validator.js`);
 
 const setCategoryController = (app, categoryService) => {
   const categoryRoute = new Router();
@@ -17,7 +17,7 @@ const setCategoryController = (app, categoryService) => {
       .json(categories);
   });
 
-  categoryRoute.post(`/`, commentsValidation(categoryService), async (req, res) => {
+  categoryRoute.post(`/`, categoryValidation(categoryService), async (req, res) => {
     const {newCategory} = req.body;
     const createdCategory = await categoryService.create({title: newCategory});
 
@@ -28,6 +28,19 @@ const setCategoryController = (app, categoryService) => {
 
     return res.status(HttpCode.OK)
       .json(createdCategory);
+  });
+
+  categoryRoute.put(`/:categoryId`, categoryValidation(categoryService, true), async (req, res) => {
+    const categoryId = req.params.categoryId;
+    const updatedCategory = await categoryService.update(categoryId, {title: req.body.newCategory});
+
+    // if (!createdCategory) {
+    //   return res.status(HttpCode.FORBIDDEN)
+    //     .send(`Forbidden`);
+    // }
+
+    // return res.status(HttpCode.OK)
+    //   .json(createdCategory);
   });
 
   categoryRoute.get(`/:categoryId`, async (req, res) => {

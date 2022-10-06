@@ -83,6 +83,16 @@ class CategoryService {
     return category.get();
   }
 
+  async update(categoryId, categoryData) {
+    const affectedRows = await this._Category.update(categoryData, {
+      where: {
+        id: categoryId,
+      }
+    });
+
+    return Boolean(affectedRows);
+  }
+
   drop(categoryId) {
     const deletedRow = this._Category.destroy({
       where: {

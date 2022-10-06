@@ -50,6 +50,21 @@ myRouter.post(`/add/category`, csrfProtection, asyncHandler(async (req, res) => 
   }
 }));
 
+myRouter.post(`/edit/category/:categoryId`, csrfProtection, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+  const {categoryId} = req.params;
+  const newCategory = req.body.category;
+
+  try {
+    await api.editCategory({categoryId, newCategory});
+    res.redirect(`/my/categories`);
+  } catch (err) {
+    const validationMessages = prepareErrors(err);
+    const allCategories = await api.getCategories();
+    res.render(`admin_activity/all-categories`, {allCategories, validationMessages, user, csrfToken: req.csrfToken()});
+  }
+}));
+
 myRouter.delete(`/:categoryId`, auth, asyncHandler(async (req, res) => {
   const {user} = req.session;
   const {categoryId} = req.params;

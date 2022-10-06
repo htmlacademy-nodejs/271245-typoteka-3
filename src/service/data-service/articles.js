@@ -114,6 +114,8 @@ class ArticlesService {
       }
     });
 
+    console.log(publicationId, publicationData);
+
     const updatedArticle = await this._Publication.findOne({
       where: {
         id: publicationId,
