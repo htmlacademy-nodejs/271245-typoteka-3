@@ -17,7 +17,7 @@ block main
                     label(for='new-publication-date' aria-label='Календарь')
                     input#new-publication-date(type='text' name='date' placeholder='2019-03-21')
               button.new-publication__button.button.button--colored(type='submit') #{articleExists ? 'Изменить' : 'Опубликовать'}
-            a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
+            a.popup__button.button.button--popup-close(href='/my' aria-label='Закрыть окно') Закрыть окно
             +insertErrorMessage(validationMessages)
             .new-publication__form.form
               .form__wrapper.form__wrapper--intro
@@ -31,8 +31,7 @@ block main
                     label
                       input.visually-hidden(type='file' name='article_img_upload')
                       | Обзор
-                    button.button.button--transparent
-                      | Удалить
+                    button.button.button--transparent(onclick='document.querySelector(`#image-name-field`).value = null; return false;') Удалить
                 .new-publication__category-wrapper
                   each category in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
