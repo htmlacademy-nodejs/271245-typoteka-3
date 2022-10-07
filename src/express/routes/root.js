@@ -30,7 +30,7 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
     categories
   ] = await Promise.all([
     api.getArticles({limit, offset}),
-    api.getCategories(true)
+    api.getCategories({categoryCount: true})
   ]);
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);

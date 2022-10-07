@@ -10,8 +10,7 @@ const setCategoryController = (app, categoryService) => {
   app.use(`/category`, categoryRoute);
 
   categoryRoute.get(`/`, async (req, res) => {
-    const {count} = req.query;
-    const categories = await categoryService.findAll(count);
+    const categories = await categoryService.findAll(req.query);
 
     return res.status(HttpCode.OK)
       .json(categories);

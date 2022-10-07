@@ -57,9 +57,9 @@ class API {
     });
   }
 
-  async getCategories(count) {
+  async getCategories({categoryCount, currentPublication} = {}) {
     return await this._load(`/category`, {
-      params: {count}
+      params: {categoryCount, currentPublication}
     });
   }
 

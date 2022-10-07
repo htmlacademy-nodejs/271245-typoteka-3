@@ -10,8 +10,8 @@ class CategoryService {
     this._PublicationCategory = sequelize.models.PublicationCategory;
   }
 
-  async findAll(needCount) {
-    if (needCount) {
+  async findAll(options) {
+    if (options?.categoryCount) {
       const result = await this._Category.findAll({
         attributes: [
           `id`,
@@ -26,9 +26,26 @@ class CategoryService {
         }]
       });
       return result.map((it) => it.get());
-    } else {
-      return this._Category.findAll({raw: true});
     }
+    if (options?.currentPublication) {
+      const result = await this._Category.findAll({
+        attributes: [
+          `id`,
+          `title`,
+        ],
+        include: [{
+          model: this._PublicationCategory,
+          as: Aliase.PUBLICATION_CATEGORIES,
+          attributes: [`publicationId`],
+          required: false,
+          where: {
+            publicationId: options.currentPublication,
+          },
+        }]
+      });
+      return result.map((it) => it.get());
+    }
+    return this._Category.findAll({raw: true});
   }
 
   async findOne(categoryId) {

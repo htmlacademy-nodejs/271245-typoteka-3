@@ -87,6 +87,8 @@ articlesRouter.get(`/edit/:articleId`, auth, admin, csrfProtection, asyncHandler
   try {
     const {articleId} = req.params;
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
+    const category = await api.getCategories({currentPublication: articleId});
+    console.log(category);
     res.render(`articles/post`, {article, user, csrfToken: req.csrfToken()});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
@@ -104,7 +106,7 @@ articlesRouter.get(`/category/:categoryId`, asyncHandler(async (req, res) => {
   const offset = (page - 1) * PUBLICATIONS_PER_PAGE;
 
   const [categories, {category, count, articlesByCategory}] = await Promise.all([
-    api.getCategories(true),
+    api.getCategories({categoryCount: true}),
     api.getCategory({categoryId, limit, offset})
   ]);
 
