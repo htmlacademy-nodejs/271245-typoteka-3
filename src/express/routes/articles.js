@@ -146,6 +146,19 @@ articlesRouter.post(`/:articleId/comments`, csrfProtection, asyncHandler(async (
   }
 }));
 
+articlesRouter.delete(`/:articleId`, auth, asyncHandler(async (req, res) => {
+  const {user} = req.session;
+  const {articleId} = req.params;
+
+  try {
+    const article = await api.removeArticle({publicationId: articleId, userId: user.id});
+
+    res.status(HttpCode.OK).send(article);
+  } catch (errors) {
+    res.status(errors.response.status).send(errors.response.statusText);
+  }
+}));
+
 articlesRouter.delete(`/:articleId/comments/:commentId`, auth, asyncHandler(async (req, res) => {
   const {user} = req.session;
   const {articleId, commentId} = req.params;

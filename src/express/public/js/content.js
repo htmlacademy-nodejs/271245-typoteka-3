@@ -63,8 +63,9 @@
 
   const removeCommentsElements = document.querySelectorAll(`.js-delete-comments`);
   const removeCategoryElements = document.querySelectorAll(`.js-delete-category`);
+  const removeArticleElements = document.querySelectorAll(`.js-delete-article`);
 
-  const removeObjectElements = [...removeCommentsElements, ...removeCategoryElements];
+  const removeObjectElements = [...removeCommentsElements, ...removeCategoryElements, ...removeArticleElements];
 
   if (removeObjectElements.length > 0) {
     Array.from(removeObjectElements).forEach((element) => {

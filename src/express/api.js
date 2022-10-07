@@ -31,6 +31,13 @@ class API {
     });
   }
 
+  removeArticle({publicationId, userId}) {
+    return this._load(`/articles/${publicationId}`, {
+      method: HttpMethod.DELETE,
+      data: {userId, publicationId}
+    });
+  }
+
   search(query) {
     return this._load(`/search`, {
       params: {query}
