@@ -22,7 +22,8 @@ class CategoryService {
         include: [{
           model: this._PublicationCategory,
           as: Aliase.PUBLICATION_CATEGORIES,
-          attributes: []
+          attributes: [],
+          required: true,
         }]
       });
       return result.map((it) => it.get());
