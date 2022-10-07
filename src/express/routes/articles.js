@@ -87,9 +87,8 @@ articlesRouter.get(`/edit/:articleId`, auth, admin, csrfProtection, asyncHandler
   try {
     const {articleId} = req.params;
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    const category = await api.getCategories({currentPublication: articleId});
-    console.log(category);
-    res.render(`articles/post`, {article, user, csrfToken: req.csrfToken()});
+    const categories = await api.getCategories({currentPublication: articleId});
+    res.render(`articles/post`, {article, categories, user, csrfToken: req.csrfToken()});
   } catch (err) {
     res.status(HttpCode.NOT_FOUND).render(`errors/404`);
   }

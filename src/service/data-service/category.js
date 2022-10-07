@@ -43,7 +43,11 @@ class CategoryService {
           },
         }]
       });
-      return result.map((it) => it.get());
+      return result.map((it) => it.get()).map((it) => ({
+        id: it.id,
+        title: it.title,
+        ...(it.publicationCategories.length && {activeCategory: true}),
+      }));
     }
     return this._Category.findAll({raw: true});
   }

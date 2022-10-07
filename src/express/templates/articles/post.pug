@@ -2,7 +2,6 @@ extends ../master.pug
 
 block main
   - var articleExists = typeof article !== 'undefined' && Object.keys(article).length > 0;
-  - var categories = typeof categories !== 'undefined' ? categories : article.categories;
   main
     section
       .popup.popup--new-publication.popup--anti
@@ -37,9 +36,9 @@ block main
                 .new-publication__category-wrapper
                   each category in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
-                      input(type='checkbox' name=`category` id=`category-${category.id}` value=category.id checked=(articleExists))
+                      input(type='checkbox' name=`category` id=`category-${category.id}` value=category.id checked=(category.activeCategory))
                       label(for=`category-${category.id}`) #{category.title}
-                  a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
+                  a.new-publication__form-link.button.button--transparent(href='/my/categories') Добавить категорию
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
