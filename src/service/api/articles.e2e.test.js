@@ -93,7 +93,7 @@ const createAPI = async () => {
 
 describe(`API returns a list of all articles`, () => {
   const ARTICLE_QUANTITY = 5;
-  const FIRST_ARTICLE_TITLE = `А пользоваться сторонними сервисами лень`;
+  // const FIRST_ARTICLE_TITLE = `А пользоваться сторонними сервисами лень`;
   let app;
   let response;
 
