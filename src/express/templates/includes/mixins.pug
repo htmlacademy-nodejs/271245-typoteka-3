@@ -20,17 +20,18 @@ mixin pagination(page, totalPages, width, prefix)
         start = 1;
       }
       let i = start - 1
-    .preview__toggle-wrapper
-      ul.preview__pagination.pagination
-        if start > 1
-          li
-            a.pagination__button.button.button--backwards(href=`${prefix}page=${page - 1}` aria-label='Страница назад') Назад
-        while i++ < end
-          li.pagination__item(class=(i === page ? 'pagination__item--active' : ''))
-            a(href=`${prefix}page=${i}`)= i
-        if end < totalPages
-          li
-            a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}` aria-label='Страница вперед') Вперёд
+    if totalPages > 1
+      .preview__toggle-wrapper
+        ul.preview__pagination.pagination
+          if start > 1
+            li
+              a.pagination__button.button.button--backwards(href=`${prefix}page=${page - 1}` aria-label='Страница назад') Назад
+          while i++ < end
+            li.pagination__item(class=(i === page ? 'pagination__item--active' : ''))
+              a(href=`${prefix}page=${i}`)= i
+          if end < totalPages
+            li
+              a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}` aria-label='Страница вперед') Вперёд
 mixin formatDate(dateString, formatStyle)
   -
     const localStringOptions = {
