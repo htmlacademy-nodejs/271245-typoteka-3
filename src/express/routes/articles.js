@@ -69,7 +69,8 @@ articlesRouter.post(`/edit/:articleId`, upload.single(`article_img_upload`), csr
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post`, {article, user, validationMessages, csrfToken: req.csrfToken()});
+    const categories = await api.getCategories({currentPublication: articleId});
+    res.render(`articles/post`, {article, categories, user, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
