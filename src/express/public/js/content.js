@@ -72,4 +72,8 @@
       element.addEventListener(`click`, removeObjectHandler);
     });
   }
+
+  if (document.querySelector(`#new-publication-date`)) {
+    flatpickr(`#new-publication-date`, {defaultDate: document.querySelector(`#new-publication-date`).dataset.value})
+  }
 })();
