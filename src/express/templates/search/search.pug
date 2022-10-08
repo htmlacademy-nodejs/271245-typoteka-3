@@ -4,11 +4,6 @@ block variables
   - wrapperClassName = 'wrapper-color'
 
 block main
-  -
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
-    }
   - var noResult = queryExist && Object.keys(results).length === 0;
   main
     section.search-page
@@ -29,7 +24,8 @@ block main
             if Object.keys(results).length > 0
                 each result in results
                   .search__result
-                    time.search__date(datetime=result.createdAt) #{formatDate(result.createdAt)}
+                    time.search__date(datetime=result.createdAt)
+                      +formatDate(result.createdAt, `DD.MM.YYYY, HH:MM`)
                     a.search__link(href=`/articles/${result.id}`) #{result.title}
                 else
                   p.search-page__empty Ничего не нашлось

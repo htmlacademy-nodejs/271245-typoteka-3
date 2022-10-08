@@ -31,3 +31,12 @@ mixin pagination(page, totalPages, width, prefix)
         if end < totalPages
           li
             a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}` aria-label='Страница вперед') Вперёд
+mixin formatDate(dateString, formatStyle)
+  -
+    const localStringOptions = {
+      [`DD.MM.YYYY`]: {year: 'numeric', month: 'numeric', day: 'numeric' },
+      [`DD.MM.YYYY, HH:MM`]: {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'},
+    };
+    const date = new Date(dateString);
+    const formatedDate = date.toLocaleString([], localStringOptions[formatStyle]);
+  | #{formatedDate}

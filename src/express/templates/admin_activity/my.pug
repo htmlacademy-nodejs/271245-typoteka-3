@@ -4,18 +4,14 @@ block variables
   - wrapperClassName = 'wrapper wrapper--nobackground'
 
 block main
-  -
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
-    }
   main.main-page.main-page--padding
     section.main-page__notes.notes
       h1.notes__title Мои записи
       ul.notes__list
         each article of articles
           li.notes__list-item.js-card
-            time.notes__item-time(datetime='2019-03-21T20:33') #{formatDate(article.createdAt)}
+            time.notes__item-time(datetime=article.createdAt)
+              +formatDate(article.createdAt, `DD.MM.YYYY, HH:MM`)
             a.notes__item-text(href=`/articles/${article.id}`) #{article.title}
             button.notes__button.button.button--close-item.js-delete-article(type='button' data-delete=`/articles/${article.id}`)
               span.visually-hidden Закрыть строку списка

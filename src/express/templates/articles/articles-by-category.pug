@@ -1,11 +1,6 @@
 extends ../master.pug
 
 block main
-  -
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
-    }
   main.articles-category
     h1 #{publicationsData.category.title}
     section.articles-category__theme-list
@@ -31,7 +26,8 @@ block main
             if article.picture
               .preview__background
                 img.preview__background-image(src=`img/${article.picture}` width='460' height='240' alt='Фотография небоскреба')
-            time.preview__time(datetime='2019-03-21T20:33') #{formatDate(article.createdAt)}
+            time.preview__time(datetime=article.createdAt)
+              +formatDate(article.createdAt, `DD.MM.YYYY`)
             h3.preview__name
               a.preview__name-link(href=`/articles/${article.id}`) #{article.title}
             p.preview__text #{article.announcement}
