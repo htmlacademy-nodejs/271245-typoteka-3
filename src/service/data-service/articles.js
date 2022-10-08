@@ -61,10 +61,10 @@ class ArticlesService {
             }
           }
         ],
-        order: [
-          [`createdAt`, `DESC`]
-        ],
       }],
+      order: [
+        [{model: this._Comment, as: Aliase.COMMENTS}, `createdAt`, `DESC`]
+      ],
     });
     data = data ? data.toJSON() : data;
 
