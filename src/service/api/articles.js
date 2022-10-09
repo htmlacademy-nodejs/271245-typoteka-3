@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode, LAST_COMMENTS_QUANTITY} = require(`../../constants.js`);
+const {HttpCode, LAST_COMMENTS_QUANTITY, MOST_DISCUSSED_ARTICLES_QUANTITY} = require(`../../constants.js`);
 const articleValidation = require(`../middlewares/article-validation.js`);
 const articleAvailability = require(`../middlewares/article-availability.js`);
 const commentsValidation = require(`../middlewares/comments-validator.js`);
@@ -15,12 +15,12 @@ const setArticlesController = (app, articleService, commentsService) => {
   app.use(`/articles`, articlesRoute);
 
   articlesRoute.get(`/`, async (req, res) => {
-    const {offset, limit, comments: needCommentsFlag} = req.query;
+    const {offset, limit, comments: needCommentsFlag, quantity} = req.query;
     let result;
     if (limit || offset) {
       result = await articleService.findPage({limit, offset});
     } else {
-      result = await articleService.findAll(needCommentsFlag);
+      result = await articleService.findAll(needCommentsFlag, quantity);
     }
     res.status(HttpCode.OK).json(result);
   });
@@ -83,10 +83,11 @@ const setArticlesController = (app, articleService, commentsService) => {
     const newComment = await commentsService.create(articleId, req.body);
 
     const io = req.app.locals.socketio;
-    const lastComments = await api.getLastComments({
-      count: LAST_COMMENTS_QUANTITY,
-    });
-    io.emit(`articleComment:create`, lastComments);
+    const [mostDiscussedArticles, lastComments] = await Promise.all([
+      api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
+      api.getLastComments({count: LAST_COMMENTS_QUANTITY})
+    ]);
+    io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
 
     return res.status(HttpCode.CREATED)
       .json(newComment);

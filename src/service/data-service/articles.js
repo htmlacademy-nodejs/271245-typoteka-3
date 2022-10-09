@@ -18,7 +18,7 @@ class ArticlesService {
     return publication.get();
   }
 
-  async findAll(needCommentsFlag) {
+  async findAll(needCommentsFlag, quantity) {
     const include = needCommentsFlag ? [Aliase.CATEGORIES, {
       model: this._Comment,
       as: Aliase.COMMENTS,
@@ -42,6 +42,10 @@ class ArticlesService {
         [`createdAt`, `DESC`]
       ]
     });
+
+    if (quantity) {
+      return publications.map((item) => item.get()).sort((a, b) => b.comments.length - a.comments.length).splice(0, +quantity);
+    }
 
     return publications.map((item) => item.get());
   }

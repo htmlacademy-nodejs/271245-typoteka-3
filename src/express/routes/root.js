@@ -1,7 +1,7 @@
 'use strict';
 
 const asyncHandler = require(`express-async-handler`);
-const {LAST_COMMENTS_QUANTITY} = require(`../../constants.js`);
+const {LAST_COMMENTS_QUANTITY, MOST_DISCUSSED_ARTICLES_QUANTITY} = require(`../../constants.js`);
 const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
 const {prepareErrors} = require(`../../utils.js`);
@@ -11,7 +11,6 @@ const rootRouter = new Router();
 const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
-const MOST_DISCUSSED_ARTICLES_QUANTITY = 4;
 const ADMIN_ID = 1;
 const api = getAPI();
 
@@ -35,14 +34,10 @@ rootRouter.get(`/`, asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(count / PUBLICATIONS_PER_PAGE);
 
-  const articlesWithComments = await api.getArticles({
-    comments: true,
-  });
-  let mostDiscussedArticles = articlesWithComments.sort((a, b) => b.comments.length - a.comments.length).splice(0, MOST_DISCUSSED_ARTICLES_QUANTITY);
-
-  const lastComments = await api.getLastComments({
-    count: LAST_COMMENTS_QUANTITY,
-  });
+  const [mostDiscussedArticles, lastComments] = await Promise.all([
+    api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
+    api.getLastComments({count: LAST_COMMENTS_QUANTITY})
+  ]);
 
   res.render(`welcome/welcome`, {articles, page, totalPages, categories, user, mostDiscussedArticles, lastComments});
 }));
