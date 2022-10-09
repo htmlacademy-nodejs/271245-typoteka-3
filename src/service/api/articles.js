@@ -87,7 +87,9 @@ const setArticlesController = (app, articleService, commentsService) => {
       api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
       api.getLastComments({count: LAST_COMMENTS_QUANTITY})
     ]);
-    io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
+    if (io) {
+      io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
+    }
 
     return res.status(HttpCode.CREATED)
       .json(newComment);
