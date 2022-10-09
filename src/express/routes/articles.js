@@ -46,7 +46,7 @@ articlesRouter.post(`/add`, upload.single(`article_img_upload`), csrfProtection,
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const categories = await api.getCategories();
-    res.render(`articles/post`, {categories, validationMessages, csrfToken: req.csrfToken()});
+    res.render(`articles/post`, {categories, user, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
@@ -143,7 +143,7 @@ articlesRouter.post(`/:articleId/comments`, csrfProtection, asyncHandler(async (
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticle({publicationId: articleId, needCategoriesCount: true});
-    res.render(`articles/post-detail`, {article, validationMessages, csrfToken: req.csrfToken()});
+    res.render(`articles/post-detail`, {article, user, validationMessages, csrfToken: req.csrfToken()});
   }
 }));
 
