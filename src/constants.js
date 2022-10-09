@@ -6,6 +6,8 @@ const DEFAULT_PORT = 3000;
 
 const MAX_ID_LENGTH = 6;
 
+const LAST_COMMENTS_QUANTITY = 4;
+
 const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
@@ -46,5 +48,6 @@ module.exports = {
   Env,
   USER_ARGV_INDEX,
   MAX_ID_LENGTH,
+  LAST_COMMENTS_QUANTITY,
   API_PREFIX,
 };

@@ -1,11 +1,13 @@
 'use strict';
 
 const express = require(`express`);
+const http = require(`http`);
 const {DEFAULT_PORT, HttpCode, API_PREFIX} = require(`../../constants.js`);
 const routes = require(`../api`);
 const sequelize = require(`../lib/sequelize.js`);
 const {getLogger} = require(`../lib/logger`);
 const {green} = require(`chalk`);
+const socket = require(`../lib/socket`);
 
 const MIN_PORT = 1000;
 const MAX_PORT = 65535;
@@ -34,6 +36,9 @@ module.exports = {
     const port = setPort(userPort);
 
     const app = express();
+    const server = http.createServer(app);
+    const socketio = socket(server);
+    app.locals.socketio = socketio;
     app.use(express.json());
 
     app.use((req, res, next) => {
@@ -55,15 +60,19 @@ module.exports = {
       logger.error(`An error occurred on processing request: ${err.message}`);
     });
 
-    app.listen(port, () => {
-      console.log(green(`БЭК-Сервер создан, порт: ${port}`));
-    })
-      .on(`listening`, () => {
-        logger.info(`Listening to connections on ${port}`);
-      })
-      .on(`error`, (err) => {
-        logger.error(`An error has occurred: ${err.message}`);
+    try {
+      server.listen(port, (err) => {
+        if (err) {
+          return logger.error(`An error has occurred: ${err.message}`);
+        }
+
+        return logger.info(`Listening to connections on ${port}`);
+      }, () => {
+        console.log(green(`БЭК-Сервер создан, порт: ${port}`));
       });
+    } catch (err) {
+      logger.error(`An error occured: ${err.message}`);
+    }
 
   },
 };

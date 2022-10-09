@@ -1,11 +1,13 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constants.js`);
+const {HttpCode, LAST_COMMENTS_QUANTITY} = require(`../../constants.js`);
 const articleValidation = require(`../middlewares/article-validation.js`);
 const articleAvailability = require(`../middlewares/article-availability.js`);
 const commentsValidation = require(`../middlewares/comments-validator.js`);
 const routeParamsValidator = require(`../middlewares/route-params-validator.js`);
+const {getAPI} = require(`../../express/api.js`);
+const api = getAPI();
 
 const setArticlesController = (app, articleService, commentsService) => {
   const articlesRoute = new Router();
@@ -79,6 +81,12 @@ const setArticlesController = (app, articleService, commentsService) => {
   articlesRoute.post(`/:articleId/comments`, [routeParamsValidator, articleAvailability(articleService), commentsValidation], async (req, res) => {
     const articleId = req.params.articleId;
     const newComment = await commentsService.create(articleId, req.body);
+
+    const io = req.app.locals.socketio;
+    const lastComments = await api.getLastComments({
+      count: LAST_COMMENTS_QUANTITY,
+    });
+    io.emit(`articleComment:create`, lastComments);
 
     return res.status(HttpCode.CREATED)
       .json(newComment);
