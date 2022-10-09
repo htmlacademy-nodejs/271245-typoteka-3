@@ -1,6 +1,7 @@
 'use strict';
 
 const asyncHandler = require(`express-async-handler`);
+const {LAST_COMMENTS_QUANTITY} = require(`../../constants.js`);
 const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
 const {prepareErrors} = require(`../../utils.js`);
@@ -11,7 +12,6 @@ const csrfProtection = csrf();
 
 const PUBLICATIONS_PER_PAGE = 8;
 const MOST_DISCUSSED_ARTICLES_QUANTITY = 4;
-const LAST_COMMENTS_QUANTITY = 4;
 const ADMIN_ID = 1;
 const api = getAPI();
 
