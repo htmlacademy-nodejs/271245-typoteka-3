@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require(`express`);
+const http = require(`http`);
 const session = require(`express-session`);
 const sequelize = require(`../service/lib/sequelize`);
 const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
@@ -9,7 +10,8 @@ const myRoutes = require(`./routes/my`);
 const articlesRoutes = require(`./routes/articles`);
 const rootRoutes = require(`./routes/root`);
 const {HttpCode} = require(`../constants.js`);
-const {blue} = require(`chalk`);
+const {blue, red} = require(`chalk`);
+const socket = require(`../service/lib/socket.js`);
 
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
@@ -22,6 +24,9 @@ if (!SESSION_SECRET) {
 }
 
 const app = express();
+const server = http.createServer(app);
+const socketio = socket(server);
+app.locals.socketio = socketio;
 
 const mySessionStore = new SequelizeStore({
   db: sequelize,
@@ -58,9 +63,19 @@ app.use((_err, req, res, _next) => {
   res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`, {user});
 });
 
-app.listen(port, () => {
-  console.log(blue(`ФРОНТ-Сервер создан, порт: ${port}`));
-});
+try {
+  server.listen(port, (err) => {
+    if (err) {
+      return console.log(red(`An error has occurred: ${err.message}`));
+    }
+
+    return console.log(blue(`Listening to connections on ${port}`));
+  }, () => {
+    console.log(blue(`ФРОНТ-Сервер создан, порт: ${port}`));
+  });
+} catch (err) {
+  console.log(red(`An error occured: ${err.message}`));
+}
 
 app.set(`views`, path.resolve(__dirname, TEMPLATES_DIR));
 app.set(`view engine`, `pug`);
