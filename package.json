@@ -11,7 +11,7 @@
     "start-back-server": "cross-env LOG_LEVEL=error NODE_ENV=production node -r dotenv/config ./src/service/service.js --server",
     "start-back-server::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node -r dotenv/config ./src/service/service.js --server",
     "start-back-server::dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./src/service/service.js --server",
-    "start-front-server": "node -r dotenv/config ./src/express/express.js",
+    "start-front-server": "cross-env SOCKET_CORS=localhost:8090 node -r dotenv/config ./src/express/express.js",
     "start-servers": "concurrently --names \"BACK-SERV,FRONT-SERV\" --prefix-colors \"green,blue\" \"npm run start-back-server\" \"npm run start-front-server\"",
     "fill-db": "node -r dotenv/config ./src/service/service.js --filldb 10"
   },
@@ -37,7 +37,6 @@
     "supertest": "6.2.3"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "axios": "0.27.2",
     "bcrypt": "5.0.1",
     "chalk": "4.1.2",

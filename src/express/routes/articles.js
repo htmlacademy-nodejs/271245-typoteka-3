@@ -6,7 +6,7 @@ const csrf = require(`csurf`);
 const upload = require(`../middlewares/upload.js`);
 const auth = require(`../middlewares/auth.js`);
 const admin = require(`../middlewares/admin.js`);
-const {HttpCode} = require(`../../constants.js`);
+const {HttpCode, LAST_COMMENTS_QUANTITY, MOST_DISCUSSED_ARTICLES_QUANTITY} = require(`../../constants.js`);
 const {ensureArray, prepareErrors} = require(`../../utils.js`);
 const {getAPI} = require(`../api.js`);
 const {Router} = require(`express`);
@@ -139,6 +139,16 @@ articlesRouter.post(`/:articleId/comments`, csrfProtection, asyncHandler(async (
 
   try {
     await api.createComment({articleId, data: commentData});
+
+    const io = req.app.locals.socketio;
+    const [mostDiscussedArticles, lastComments] = await Promise.all([
+      api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
+      api.getLastComments({count: LAST_COMMENTS_QUANTITY})
+    ]);
+    if (io) {
+      io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
+    }
+
     res.redirect(`/articles/${articleId}`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
@@ -154,6 +164,15 @@ articlesRouter.delete(`/:articleId`, auth, asyncHandler(async (req, res) => {
   try {
     const article = await api.removeArticle({publicationId: articleId, userId: user.id});
 
+    const io = req.app.locals.socketio;
+    const [mostDiscussedArticles, lastComments] = await Promise.all([
+      api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
+      api.getLastComments({count: LAST_COMMENTS_QUANTITY})
+    ]);
+    if (io) {
+      io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
+    }
+
     res.status(HttpCode.OK).send(article);
   } catch (errors) {
     res.status(errors.response.status).send(errors.response.statusText);
@@ -166,6 +185,15 @@ articlesRouter.delete(`/:articleId/comments/:commentId`, auth, asyncHandler(asyn
 
   try {
     const comment = await api.removeComment({articleId, userId: user.id, commentId});
+
+    const io = req.app.locals.socketio;
+    const [mostDiscussedArticles, lastComments] = await Promise.all([
+      api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
+      api.getLastComments({count: LAST_COMMENTS_QUANTITY})
+    ]);
+    if (io) {
+      io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
+    }
 
     res.status(HttpCode.OK).send(comment);
   } catch (errors) {

@@ -1,13 +1,11 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode, LAST_COMMENTS_QUANTITY, MOST_DISCUSSED_ARTICLES_QUANTITY} = require(`../../constants.js`);
+const {HttpCode} = require(`../../constants.js`);
 const articleValidation = require(`../middlewares/article-validation.js`);
 const articleAvailability = require(`../middlewares/article-availability.js`);
 const commentsValidation = require(`../middlewares/comments-validator.js`);
 const routeParamsValidator = require(`../middlewares/route-params-validator.js`);
-const {getAPI} = require(`../../express/api.js`);
-const api = getAPI();
 
 const setArticlesController = (app, articleService, commentsService) => {
   const articlesRoute = new Router();
@@ -81,15 +79,6 @@ const setArticlesController = (app, articleService, commentsService) => {
   articlesRoute.post(`/:articleId/comments`, [routeParamsValidator, articleAvailability(articleService), commentsValidation], async (req, res) => {
     const articleId = req.params.articleId;
     const newComment = await commentsService.create(articleId, req.body);
-
-    const io = req.app.locals.socketio;
-    const [mostDiscussedArticles, lastComments] = await Promise.all([
-      api.getArticles({comments: true, quantity: MOST_DISCUSSED_ARTICLES_QUANTITY}),
-      api.getLastComments({count: LAST_COMMENTS_QUANTITY})
-    ]);
-    if (io) {
-      io.emit(`articleComment:create`, {lastComments, mostDiscussedArticles});
-    }
 
     return res.status(HttpCode.CREATED)
       .json(newComment);

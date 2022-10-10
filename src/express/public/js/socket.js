@@ -1,8 +1,7 @@
 'use strict';
 
 (() => {
-  const SERVER_URL = `http://localhost:3000`;
-  const socket = io(SERVER_URL);
+  const socket = io();
 
   const formatText = (str) => {
     const TEXT_MAX_STRING = 100;
